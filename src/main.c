@@ -326,6 +326,8 @@ static void     init_main( void)
             = FALSE;
     option_flags.trig = TRIGRAPHS_INIT;
     option_flags.dig = DIGRAPHS_INIT;
+    sh_file = NULL;
+    sh_line = 0;
 }
 
 int     mcpp_lib_main

@@ -3534,6 +3534,32 @@ void    add_file(
     FILEINFO *      file;
     const char *    too_many_include_nest =
             "More than %.0s%ld nesting of #include";    /* _F_ _W4_ */
+            
+    //
+    // When encoding is UTF-8, skip BOM if present.
+    //
+    if(mbchar == UTF8 && fp != NULL && ftell(fp) == 0)
+    {
+        const unsigned char UTF8_BOM[3] = {0xEF, 0xBB, 0xBF};
+        unsigned char FILE_HEAD[3] = {0, 0, 0};
+        int i;
+        for(i = 0; i < 3; ++i)
+        {
+            FILE_HEAD[i] = getc(fp);
+            if(FILE_HEAD[i] != UTF8_BOM[i])
+            {
+                if(FILE_HEAD[i] == (unsigned char)EOF)
+                {
+                    i--;
+                }
+                for(; i >= 0; --i)
+                {
+                    ungetc(FILE_HEAD[i], fp);
+                }
+                break;
+            }
+        }
+    }
 
     filename = set_fname( filename);    /* Search or append to fnamelist[]  */
     fullname = set_fname( fullname);    /* Search or append to fnamelist[]  */
@@ -3858,6 +3884,9 @@ static int  chk_dirp(
 }
 #endif
 
+FILEINFO*       sh_file;
+int             sh_line;
+
 void    sharp(
     FILEINFO *  sharp_file,
     int         flag        /* Flag to append to the line for GCC   */
@@ -3868,8 +3897,6 @@ void    sharp(
  * else (i.e. 'sharp_file' is NULL) 'infile'.
  */
 {
-    static FILEINFO *   sh_file;
-    static int  sh_line;
     FILEINFO *  file;
     int         line;
 

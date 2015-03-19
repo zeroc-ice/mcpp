@@ -390,6 +390,8 @@ extern char * const     work_end;   /* End of work[] buffer         */
 extern char     identifier[];       /* Lastly scanned name          */
 extern IFINFO   ifstack[];          /* Information of #if nesting   */
 extern char     work_buf[];
+extern FILEINFO * sh_file;
+extern int      sh_line;
         /* Temporary buffer for directive line and macro expansion  */
 
 /* main.c   */
@@ -557,6 +559,6 @@ extern void     init_system( void);
 #endif
 #endif
 
-#if HOST_HAVE_STPCPY
+#if HOST_HAVE_STPCPY && !defined(stpcpy)
 extern char *   stpcpy( char * dest, const char * src);
 #endif

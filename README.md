@@ -16,19 +16,10 @@ Simply type:
 
 This creates a static library `libmcpp.a`. Depending on your platform, the library is created in the following directory:
 
-* `lib64` - RHEL 64-bit
 * `lib/i386-linux-gnu` - Ubuntu 32-bit
 * `lib/x86_64-linux-gnu` - Ubuntu 64-bit
-* `lib` - Other platforms
-
-The exceptions are RHEL 64 bit systems where 'lib64' is used,  Ubuntu 32 bit systems where 'lib/i386-linux-gnu' is used, and Ubuntu 
-64 bit system where 'lib/x86_64-linux-gnu' is used.
-
-This creates a static library 'libmcpp.a`'. On most systems this library is placed in a directory named 'lib'.
-
-The exceptions are RHEL 64 bit systems where 'lib64' is used,  Ubuntu 32 bit systems where 'lib/i386-linux-gnu' is used, and Ubuntu 
-64 bit system where 'lib/x86_64-linux-gnu' is used.
-
+* `lib64` - Any 64-bit Linux system which has /usr/lib64
+* `lib` - OS X, Windows with MINGW, and other platforms
 
 ### Windows with Visual Studio
 

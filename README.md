@@ -18,8 +18,8 @@ This creates a static library `libmcpp.a`. Depending on your platform, the libra
 
 * `lib/i386-linux-gnu` - Ubuntu 32-bit
 * `lib/x86_64-linux-gnu` - Ubuntu 64-bit
-* `lib64` - Any 64-bit Linux system which has /usr/lib64
-* `lib` - OS X, Windows with MINGW, and other platforms
+* `lib64` - Any Linux system with a `/usr/lib64` directory
+* `lib` - OS X, Windows with MinGW, and other platforms
 
 ### Windows with Visual Studio
 

@@ -1254,9 +1254,10 @@ static void dump_repl(
     for (cp = dp->repl; (c = *cp++ & UCHARMAX) != EOS; ) {
 
         switch (c) {
-        case MAC_PARM:                              /* Parameter    */
+        case MAC_PARM: {                             /* Parameter    */
+            PARM    parm;
             c = (*cp++ & UCHARMAX) - 1;
-            PARM    parm = parms[ c];
+            parm = parms[ c];
             if ((numargs & VA_ARGS) && c == (numargs & ~AVA_ARGS) - 1) {
                 mcpp_fputs( gcc2_va ? parm.name : "__VA_ARGS__"
                         , FP2DEST( fp));
@@ -1266,6 +1267,7 @@ static void dump_repl(
                     mcpp_fputc( *cp1++, FP2DEST( fp));
             }
             break;
+        }
         case DEF_MAGIC:
             /* Else skip    */
             break;

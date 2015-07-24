@@ -4,6 +4,8 @@
 #
 # **********************************************************************
 
+PREFIX		= /opt/mcpp-2.7.2
+
 CFLAGS += -O -w
 
 UNAME = $(shell uname)
@@ -53,6 +55,14 @@ $(LIBDIR)/libmcpp.a: $(OBJS)
 	-mkdir -p $(LIBDIR)
 	ar rcs $(LIBDIR)/libmcpp.a $(OBJS)
 	ranlib $(LIBDIR)/libmcpp.a
+
+install: $(LIBDIR)/libmcpp.a
+ifneq ($(findstring MINGW,$(UNAME)),)
+	cp $(LIBDIR)/libmcpp.a $(PREFIX)
+else
+	@mkdir -p $(PREFIX)/lib
+	cp $(LIBDIR)/libmcpp.a $(PREFIX)/lib
+endif
 
 clean:
 	rm -f $(OBJS)

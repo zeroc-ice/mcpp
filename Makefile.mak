@@ -4,21 +4,23 @@
 #
 # **********************************************************************
 
-RELEASE_OBJS = Release\directive.obj \
-	       Release\eval.obj \
-	       Release\expand.obj \
-	       Release\main.obj \
-	       Release\mbchar.obj \
-	       Release\support.obj \
-	       Release\system.obj
+PREFIX		= C:\mcpp-2.7.2
 
-DEBUG_OBJS = Debug\directive.obj \
-	     Debug\eval.obj \
-	     Debug\expand.obj \
-	     Debug\main.obj \
-	     Debug\mbchar.obj \
-	     Debug\support.obj \
-	     Debug\system.obj
+RELEASE_OBJS 	= Release\directive.obj \
+		  Release\eval.obj \
+		  Release\expand.obj \
+		  Release\main.obj \
+		  Release\mbchar.obj \
+		  Release\support.obj \
+		  Release\system.obj
+
+DEBUG_OBJS 	= Debug\directive.obj \
+		  Debug\eval.obj \
+		  Debug\expand.obj \
+		  Debug\main.obj \
+		  Debug\mbchar.obj \
+		  Debug\support.obj \
+		  Debug\system.obj
 
 {.\}.c{Debug}.obj::
 	$(CC) /MDd /Od /c /FoDebug\  $<
@@ -37,6 +39,12 @@ mcpp.lib: $(RELEASE_OBJS)
 
 mcppd.lib: $(DEBUG_OBJS)
 	lib /nologo /out:mcppd.lib $(DEBUG_OBJS)
+
+install: mcpp.lib mcppd.lib
+	@if not exist "$(PREFIX)\Release" mkdir "$(PREFIX)\Release"
+	copy mcpp.lib $(PREFIX)\Release\mcpp.lib
+	@if not exist "$(PREFIX)\Debug" mkdir "$(PREFIX)\Debug"
+	copy mcppd.lib $(PREFIX)\Debug\mcppd.lib
 
 clean:
 	del /q $(RELEASE_OBJS)

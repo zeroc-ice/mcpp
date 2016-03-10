@@ -13,6 +13,10 @@ MACHINE = $(shell uname -m)
 
 LIBDIR = lib
 
+ifeq ($(UNAME),Darwin)
+	CFLAGS += -mmacosx-version-min=10.9
+endif
+
 ifeq ($(UNAME),Linux)
     CFLAGS += -fPIC
 
@@ -47,7 +51,7 @@ endif
 #
 ifneq ($(findstring MINGW,$(UNAME)),)
     CC = gcc
-endif 
+endif
 
 OBJS = directive.o eval.o expand.o main.o mbchar.o support.o system.o
 
@@ -67,4 +71,3 @@ endif
 clean:
 	rm -f $(OBJS)
 	rm -rf $(LIBDIR)
-

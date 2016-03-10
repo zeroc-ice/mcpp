@@ -597,6 +597,7 @@ char *  scan_quote(
     const char * const      empty_const
                         = "Empty character constant %s%.0ld%s";
     const char *    skip;
+    size_t      len;
     int         c;
     char *      out_p = out;
 
@@ -654,6 +655,7 @@ char *  scan_quote(
             "Illegal control character %.0s0lx%02x in quotation"    /* _W1_ */
                     , NULL, (long) c, NULL);
         *out_p++ = c;
+chk_limit:
         if (out_end < out_p) {
             *out_end = EOS;
             cfatal( "Too long quotation", NULL, 0L, NULL);  /* _F_  */
@@ -1289,7 +1291,7 @@ static char *   get_line(
 /*
  * ANSI (ISO) C: translation phase 1, 2.
  * Get the next logical line from source file.
- * Convert [CR+LF] to [LF]. 
+ * Convert [CR+LF] to [LF].
  */
 {
 #define cr_warn_level 1
@@ -1981,4 +1983,3 @@ static void dump_token(
     mcpp_fputs( "token", DBG);
     dump_string( t_type[ token_type - NAM], cp);
 }
-

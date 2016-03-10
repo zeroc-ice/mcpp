@@ -129,6 +129,15 @@
 #define CURRENT             1
 #define SOURCE              2
 
+/* Default MBCHAR (multi-byte character) encoding.  */
+#define EUC_JP          0x10    /* Extended UNIX code of JIS X 0208 */
+#define GB2312          0x20    /* EUC-like encoding of Chinese GB 2312-80  */
+#define KSC5601         0x30    /* EUC-like encoding of Korean KS C 5601    */
+#define SJIS            0x80    /* Shift-JIS encoding of JIS X 0208 */
+#define BIGFIVE         0x90    /* Encoding of Taiwanese Big Five   */
+#define ISO2022_JP      0x100   /* ISO-2022-JP (ISO-2022-JP1) encoding      */
+#define UTF8            0x1000  /* UTF-8 encoding           */
+
 #define MBCHAR              UTF8
 
 #if     COMPILER == INDEPENDENT
@@ -234,4 +243,3 @@
 #if     KMMALLOC && _MEM_DEBUG
 #include        "xalloc.h"
 #endif
-

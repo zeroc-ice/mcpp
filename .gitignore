@@ -2,6 +2,9 @@
 *.a
 *~
 *.swp
-Debug
-Release
 *.lib
+
+msbuild/nuget.exe
+msbuild/Win32
+msbuild/x64
+msbuild/packages

@@ -25,6 +25,12 @@ This creates a static library `libmcpp.a`. Depending on your platform, the libra
 
 Open a Visual Studio Command Prompt, and type:
 ```
-  nmake -f Makefile.mak
+  MSbuild msbuild\mcpp.vcxproj
 ```
-This creates two static libraries: `mcpp.lib`, built with `/MD` ("release") and `mcppd.lib`, built with `/MDd` ("debug").
+This will create a static library `mcpp.lib` for Release configurations and `mcppd.lib` for Debug configurations,
+to build a different platform set the MSbuild Platform property likewise to build a different configuration set
+the MSbuild Configuration property.
+
+```
+  MSbuild msbuild\mcpp.vcxproj /p:Configuration=Release /p:Platform=X64
+```

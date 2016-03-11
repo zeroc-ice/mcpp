@@ -9,6 +9,9 @@
       <Platform>Win32</Platform>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(DefaultPlatformToolset)' == ''">
+      <DefaultPlatformToolset>v100</DefaultPlatformToolset>
+    </PropertyGroup>
     <!-- Custom task to download files -->
     <UsingTask TaskName="DownloadFile"
                TaskFactory="CodeTaskFactory"
@@ -35,16 +38,16 @@
 
     <ItemGroup>
       <Projects Include="mcpp.vcxproj">
-        <Properties>Configuration=Debug;Platform=Win32</Properties>
+        <Properties>Configuration=Debug;Platform=Win32;DefaultPlatformToolset=$(DefaultPlatformToolset)</Properties>
       </Projects>
       <Projects Include="mcpp.vcxproj">
-        <Properties>Configuration=Debug;Platform=x64</Properties>
+        <Properties>Configuration=Debug;Platform=x64;DefaultPlatformToolset=$(DefaultPlatformToolset)</Properties>
       </Projects>
       <Projects Include="mcpp.vcxproj">
-        <Properties>Configuration=Release;Platform=Win32</Properties>
+        <Properties>Configuration=Release;Platform=Win32;DefaultPlatformToolset=$(DefaultPlatformToolset)</Properties>
       </Projects>
       <Projects Include="mcpp.vcxproj">
-        <Properties>Configuration=Release;Platform=x64</Properties>
+        <Properties>Configuration=Release;Platform=x64;DefaultPlatformToolset=$(DefaultPlatformToolset)</Properties>
       </Projects>
     </ItemGroup>
 

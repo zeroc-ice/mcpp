@@ -74,6 +74,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\directive.c" />
     <ClCompile Include="..\eval.c" />
     <ClCompile Include="..\expand.c" />
     <ClCompile Include="..\main.c" />

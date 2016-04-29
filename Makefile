@@ -46,6 +46,10 @@ ifeq ($(UNAME),Linux)
     endif
 endif
 
+ifeq ($(UNAME),AIX)
+    CC = xlc_r
+endif
+
 #
 # The default C compiler (cc) is undefined with MinGW
 #

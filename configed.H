@@ -193,6 +193,9 @@
 #define _POSIX_C_SOURCE_defined     1
 #endif
 #include    "limits.h"
+#ifdef _AIX
+#include    "sys/stat.h"
+#endif
 #undef  _POSIX_
 #undef  _POSIX_SOURCE
 #ifdef  _POSIX_C_SOURCE_defined

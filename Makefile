@@ -4,7 +4,7 @@
 #
 # **********************************************************************
 
-PREFIX		= /opt/mcpp-2.7.2
+PREFIX ?= /opt/mcpp-2.7.2
 
 CFLAGS += -O -w
 
@@ -18,9 +18,9 @@ ifeq ($(UNAME),Darwin)
 endif
 
 ifeq ($(UNAME),Linux)
-    CFLAGS += -fPIC
+	CFLAGS += -fPIC
 
-    ifeq ($(MACHINE),i686)
+	ifeq ($(MACHINE),i686)
 	CFLAGS += -m32
 
 	#
@@ -29,7 +29,7 @@ ifeq ($(UNAME),Linux)
 	ifeq ($(shell test -d /usr/lib/i386-linux-gnu && echo 0),0)
 		LIBDIR = lib/i386-linux-gnu
 	endif
-    else
+	else
 	#
 	# Ubuntu.
 	#
@@ -43,18 +43,18 @@ ifeq ($(UNAME),Linux)
 	ifeq ($(shell test -d /usr/lib64 && echo 0),0)
 		LIBDIR = lib64
 	endif
-    endif
+	endif
 endif
 
 ifeq ($(UNAME),AIX)
-    CC = xlc_r
+	CC ?= xlc_r
 endif
 
 #
 # The default C compiler (cc) is undefined with MinGW
 #
 ifneq ($(findstring MINGW,$(UNAME)),)
-    CC = gcc
+	CC ?= gcc
 endif
 
 OBJS = directive.o eval.o expand.o main.o mbchar.o support.o system.o

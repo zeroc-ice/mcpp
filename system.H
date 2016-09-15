@@ -70,7 +70,7 @@
  */
 
 /*
- * The variable 'mcpp_mode' specifies the mode of preprocessing as one of 
+ * The variable 'mcpp_mode' specifies the mode of preprocessing as one of
  *          OLD_PREP, KR, STD, or POST_STD.
  *      Those modes have many differences each other --
  *          i.e. handling of translation phases; handling of some
@@ -371,3 +371,8 @@ typedef long            expr_t;
  */
 #define CPLUS               1       /* 199711L for C++ Standard     */
 
+
+//
+// helper methods to open files using UNICODE paths
+//
+FILE* openFile(const char *filename, const char *mode);

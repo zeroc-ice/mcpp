@@ -307,7 +307,7 @@ int     mcpp_lib_main
 
     /* Open input file, "-" means stdin.    */
     if (in_file != NULL && ! str_eq( in_file, "-")) {
-        if ((fp_in = fopen( in_file, "r")) == NULL) {
+        if ((fp_in = openFile( in_file, "r")) == NULL) {
             mcpp_fprintf( ERR, "Can't open input file \"%s\".\n", in_file);
             errors++;
             goto  fatal_error_exit;
@@ -317,7 +317,7 @@ int     mcpp_lib_main
     }
     /* Open output file, "-" means stdout.  */
     if (out_file != NULL && ! str_eq( out_file, "-")) {
-        if ((fp_out = fopen( out_file, "w")) == NULL) {
+        if ((fp_out = openFile( out_file, "w")) == NULL) {
             mcpp_fprintf( ERR, "Can't open output file \"%s\".\n", out_file);
             errors++;
             goto  fatal_error_exit;

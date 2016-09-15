@@ -36,6 +36,7 @@
  *      1. specify the constants in "configed.H" or "noconfig.H",
  *      2. append the system-dependent routines in this file.
  */
+
 #include    "system.H"
 #include    "internal.H"
 
@@ -414,9 +415,9 @@ opt_search: ;
         set_sys_dirs( set_cplus_dir);
 
     if (mkdep_mf) {                         /* -MF overrides -MD    */
-        mkdep_fp = fopen( mkdep_mf, "w");
+        mkdep_fp = openFile( mkdep_mf, "w");
     } else if (mkdep_md) {
-        mkdep_fp = fopen( mkdep_md, "w");
+        mkdep_fp = openFile( mkdep_md, "w");
     }
     if (mkdep_mq)                           /* -MQ overrides -MT    */
         mkdep_target = mkdep_mq;
@@ -580,7 +581,7 @@ static void def_a_macro(
     skip_nl();                      /* Clear the appended <newline> */
 }
 
-static void     chk_opts( 
+static void     chk_opts(
     int     sflag,      /* Flag of Standard or post-Standard mode   */
     int     trad                    /* -traditional (GCC only)      */
 )
@@ -835,7 +836,7 @@ static void set_sys_dirs(
     set_a_dir( "/usr/local/include");
 #endif
 
-#ifdef  C_INCLUDE_DIR1 
+#ifdef  C_INCLUDE_DIR1
     set_a_dir( C_INCLUDE_DIR1);
 #endif
 #ifdef  C_INCLUDE_DIR2
@@ -882,7 +883,7 @@ static void set_a_dir(
         incdir = (const char **) xrealloc( (void *) incdir
                 , sizeof (char *) * max_inc * 2);
         incend = &incdir[ max_inc];
-        max_inc *= 2;                   
+        max_inc *= 2;
     }
 
     if (dirname == NULL)
@@ -1140,7 +1141,7 @@ static char *   norm_path(
             } else {                                /* Impossible   */
                 break;
             }
-        } else {                                    /* Impossible   */ 
+        } else {                                    /* Impossible   */
             break;
         }
     }
@@ -1348,7 +1349,7 @@ void    put_depend(
 }
 
 static char *   md_init(
-    const char *    filename,   /* The source file name             */ 
+    const char *    filename,   /* The source file name             */
     char *  output              /* Output to dependency file        */
 )
 /*
@@ -1379,7 +1380,7 @@ static char *   md_init(
     if (! mkdep_fp) {   /* Unless already opened by -MF, -MD, -MMD options  */
         if (mkdep & MD_FILE) {
             strcpy( cp, "d");
-            mkdep_fp = fopen( prefix, "w");
+            mkdep_fp = openFile(prefix, "w");
         } else {
             mkdep_fp = fp_out;  /* Output dependency line to normal output  */
             no_output++;                /* Without normal output    */
@@ -1617,7 +1618,7 @@ static int  has_directory(
 )
 /*
  * If a directory is found in the 'source' filename string (i.e. "includer"),
- * the directory part of the string is copied to 'directory' and 
+ * the directory part of the string is copied to 'directory' and
  * has_directory() returns TRUE.
  * Else, nothing is copied and it returns FALSE.
  */
@@ -1734,10 +1735,10 @@ static int  open_file(
         return  FALSE;
     if (included( fullname))        /* Once included    */
         goto  true;
-        
+
     if ((max_open != 0 && max_open <= include_nest)
                             /* Exceed the known limit of open files */
-            || ((fp = fopen( fullname, "r")) == NULL && errno == EMFILE)) {
+            || ((fp = openFile( fullname, "r")) == NULL && errno == EMFILE)) {
                             /* Reached the limit for the first time */
         if (mcpp_debug & PATH) {
 #if HOST_COMPILER == BORLANDC
@@ -1757,14 +1758,14 @@ static int  open_file(
         file->pos = ftell( file->fp);
         fclose( file->fp);
         /* In case of failure, re-open the includer */
-        if ((fp = fopen( fullname, "r")) == NULL) {
-            file->fp = fopen( cur_fullname, "r");
+        if ((fp = openFile( fullname, "r")) == NULL) {
+            file->fp = openFile( cur_fullname, "r");
             fseek( file->fp, file->pos, SEEK_SET);
             goto  false;
         }
         if (max_open == 0)      /* Remember the limit of the system */
             max_open = include_nest;
-    } else if (fp == NULL)                  /* No read permission   */ 
+    } else if (fp == NULL)                  /* No read permission   */
         goto  false;
     /* Truncate buffer of the includer to save memory   */
     len = (int) (file->bptr - file->buffer);
@@ -1821,7 +1822,7 @@ void    add_file(
     FILEINFO *      file;
     const char *    too_many_include_nest =
             "More than %.0s%ld nesting of #include";    /* _F_ _W4_ */
-            
+
     //
     // When encoding is UTF-8, skip BOM if present.
     //
@@ -2697,4 +2698,74 @@ void    clear_filelist( void)
         free( (void *) namep->name);
     free( (void *) fnamelist);
     free( (void *) once_list);
+}
+
+#ifdef _WIN32
+
+#include <Windows.h>
+
+int
+utf8ToUtf16(const char* source, wchar_t** target)
+{
+    if(source)
+    {
+        int size = MultiByteToWideChar(CP_UTF8, 0, source, -1, 0, 0) + 1;
+        if(size == 0)
+        {
+            return 0;
+        }
+
+        wchar_t* buf = malloc(size * sizeof(wchar_t));
+        if (!buf)
+        {
+            return 0;
+        }
+
+        if(!MultiByteToWideChar(CP_UTF8, 0, source, -1, buf, size))
+        {
+            if(buf)
+            {
+                free(buf);
+            }
+            return 0;
+        }
+        *target = buf;
+    }
+    else
+    {
+        *target = 0;
+    }
+    return 1;
+}
+#endif
+
+FILE* openFile(const char* filename, const char* mode)
+{
+#ifdef _WIN32
+    FILE* f = 0;
+    wchar_t* wfilename = 0;
+    wchar_t* wmode = 0;
+
+    if(utf8ToUtf16(filename, &wfilename))
+    {
+        if(utf8ToUtf16(mode, &wmode))
+        {
+            f = _wfopen(wfilename, wmode);
+        }
+    }
+
+    if(wfilename)
+    {
+        free(wfilename);
+    }
+
+    if(wmode)
+    {
+        free(wmode);
+    }
+
+    return f;
+#else
+    return fopen(filename, mode);
+#endif
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ProjectConfiguration Include="Debug|Win32">
@@ -48,11 +48,12 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <PropertyGroup>
-      <IntDir>$(Platform)\$(Configuration)\</IntDir>
-      <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x600;WIN32_LEAN_AND_MEAN;_CONSOLE</PreprocessorDefinitions>
       <WarningLevel>Level3</WarningLevel>
       <DisableSpecificWarnings>4996;4244;4246;4267;4146;4018</DisableSpecificWarnings>
     </ClCompile>
@@ -67,9 +68,10 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
     <ClCompile>
-      <PreprocessorDefinitions>NDEBUG</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <ProgramDataBaseFileName></ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>
+      </ProgramDataBaseFileName>
       <DebugInformationFormat Condition="'$(DefaultPlatformToolset)' != 'v100'">None</DebugInformationFormat>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -81,6 +83,14 @@
     <ClCompile Include="..\mbchar.c" />
     <ClCompile Include="..\support.c" />
     <ClCompile Include="..\system.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\config.h" />
+    <ClInclude Include="..\configed.H" />
+    <ClInclude Include="..\internal.H" />
+    <ClInclude Include="..\mcpp_lib.h" />
+    <ClInclude Include="..\mcpp_out.h" />
+    <ClInclude Include="..\system.H" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Targets" />
 </Project>

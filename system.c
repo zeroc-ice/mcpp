@@ -2701,69 +2701,35 @@ void    clear_filelist( void)
 }
 
 #ifdef _WIN32
-
-#include <Windows.h>
-
-int
-utf8ToUtf16(const char* source, wchar_t** target)
-{
-    if(source)
-    {
-        int size = MultiByteToWideChar(CP_UTF8, 0, source, -1, 0, 0) + 1;
-        if(size == 0)
-        {
-            return 0;
-        }
-
-        wchar_t* buf = malloc(size * sizeof(wchar_t));
-        if (!buf)
-        {
-            return 0;
-        }
-
-        if(!MultiByteToWideChar(CP_UTF8, 0, source, -1, buf, size))
-        {
-            if(buf)
-            {
-                free(buf);
-            }
-            return 0;
-        }
-        *target = buf;
-    }
-    else
-    {
-        *target = 0;
-    }
-    return 1;
-}
+#  include <Windows.h>
 #endif
 
 FILE* openFile(const char* filename, const char* mode)
 {
 #ifdef _WIN32
     FILE* f = 0;
-    wchar_t* wfilename = 0;
-    wchar_t* wmode = 0;
-
-    if(utf8ToUtf16(filename, &wfilename))
+    if(filename && mode)
     {
-        if(utf8ToUtf16(mode, &wmode))
+        int wfilenameLength = strlen(filename) + 1;
+        wchar_t* wfilename = malloc(wfilenameLength * sizeof(wchar_t));
+        if(wfilename)
         {
-            f = _wfopen(wfilename, wmode);
+            if(MultiByteToWideChar(CP_UTF8, 0, filename, -1, wfilename, wfilenameLength))
+            {
+                int wmodeLength = strlen(mode) + 1;
+                wchar_t* wmode = malloc(wmodeLength * sizeof(wchar_t));
+                if(wmode)
+                {
+                    if(MultiByteToWideChar(CP_UTF8, 0, mode, -1, wmode, wmodeLength))
+                    {
+                        _wfopen_s(&f, wfilename, wmode);
+                    }
+                    free(wmode);
+                }
+            }
+            free(wfilename);
         }
     }
-
-    if(wfilename)
-    {
-        free(wfilename);
-    }
-
-    if(wmode)
-    {
-        free(wmode);
-    }
-
     return f;
 #else
     return fopen(filename, mode);

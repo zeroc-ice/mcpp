@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>mcpp.v120</id>
+    <id>mcpp.v100</id>
     <version>2.7.2.10</version>
     <authors>Kiyoshi Matsui</authors>
     <licenseUrl>https://raw.githubusercontent.com/zeroc-ice/mcpp/master/LICENSE</licenseUrl>

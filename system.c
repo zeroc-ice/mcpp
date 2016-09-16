@@ -415,9 +415,9 @@ opt_search: ;
         set_sys_dirs( set_cplus_dir);
 
     if (mkdep_mf) {                         /* -MF overrides -MD    */
-        mkdep_fp = openFile( mkdep_mf, "w");
+        mkdep_fp = mcpp_fopen( mkdep_mf, "w");
     } else if (mkdep_md) {
-        mkdep_fp = openFile( mkdep_md, "w");
+        mkdep_fp = mcpp_fopen( mkdep_md, "w");
     }
     if (mkdep_mq)                           /* -MQ overrides -MT    */
         mkdep_target = mkdep_mq;
@@ -1380,7 +1380,7 @@ static char *   md_init(
     if (! mkdep_fp) {   /* Unless already opened by -MF, -MD, -MMD options  */
         if (mkdep & MD_FILE) {
             strcpy( cp, "d");
-            mkdep_fp = openFile(prefix, "w");
+            mkdep_fp = mcpp_fopen(prefix, "w");
         } else {
             mkdep_fp = fp_out;  /* Output dependency line to normal output  */
             no_output++;                /* Without normal output    */
@@ -1738,7 +1738,7 @@ static int  open_file(
 
     if ((max_open != 0 && max_open <= include_nest)
                             /* Exceed the known limit of open files */
-            || ((fp = openFile( fullname, "r")) == NULL && errno == EMFILE)) {
+            || ((fp = mcpp_fopen( fullname, "r")) == NULL && errno == EMFILE)) {
                             /* Reached the limit for the first time */
         if (mcpp_debug & PATH) {
 #if HOST_COMPILER == BORLANDC
@@ -1758,8 +1758,8 @@ static int  open_file(
         file->pos = ftell( file->fp);
         fclose( file->fp);
         /* In case of failure, re-open the includer */
-        if ((fp = openFile( fullname, "r")) == NULL) {
-            file->fp = openFile( cur_fullname, "r");
+        if ((fp = mcpp_fopen( fullname, "r")) == NULL) {
+            file->fp = mcpp_fopen( cur_fullname, "r");
             fseek( file->fp, file->pos, SEEK_SET);
             goto  false;
         }
@@ -2704,7 +2704,7 @@ void    clear_filelist( void)
 #  include <Windows.h>
 #endif
 
-FILE* openFile(const char* filename, const char* mode)
+FILE* mcpp_fopen(const char* filename, const char* mode)
 {
 #ifdef _WIN32
     FILE* f = 0;

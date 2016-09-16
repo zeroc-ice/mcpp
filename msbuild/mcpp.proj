@@ -70,13 +70,13 @@
             DependsOnTargets="Build">
             <RemoveDir Directories="$(PackageDirectory)" />
             <MSBuild Projects="mcpp.nuget.targets"
-                     Properties="Configuration=Debug;Platform=Win32;PackageDirectory=$(PackageDirectory)" />
+                     Properties="Configuration=Debug;Platform=Win32;PackageDirectory=$(PackageDirectory);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
             <MSBuild Projects="mcpp.nuget.targets"
-                     Properties="Configuration=Debug;Platform=x64;PackageDirectory=$(PackageDirectory)" />
+                     Properties="Configuration=Debug;Platform=x64;PackageDirectory=$(PackageDirectory);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
             <MSBuild Projects="mcpp.nuget.targets"
-                     Properties="Configuration=Release;Platform=Win32;PackageDirectory=$(PackageDirectory)" />
+                     Properties="Configuration=Release;Platform=Win32;PackageDirectory=$(PackageDirectory);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
             <MSBuild Projects="mcpp.nuget.targets"
-                     Properties="Configuration=Release;Platform=x64;PackageDirectory=$(PackageDirectory)" />
+                     Properties="Configuration=Release;Platform=x64;PackageDirectory=$(PackageDirectory);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
             <Copy SourceFiles="mcpp.$(DefaultPlatformToolset)\README.md"
                   DestinationFolder="$(PackageDirectory)" />
             <Copy SourceFiles="mcpp.$(DefaultPlatformToolset)\mcpp.$(DefaultPlatformToolset).nuspec"

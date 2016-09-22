@@ -375,4 +375,4 @@ typedef long            expr_t;
 //
 // helper methods to open files using UNICODE paths
 //
-FILE* openFile(const char *filename, const char *mode);
+FILE* mcpp_fopen(const char *filename, const char *mode);

@@ -57,11 +57,11 @@
           ]
         }],
         ['OS=="win"', {
-            'defines': [
+          'defines' : [
               '_WIN32_WINNT=0x600',
               'WIN32_LEAN_AND_MEAN'
-            ],
-          }
+          ]
+        }]
       ]
     }
   ]

@@ -36,7 +36,6 @@
         <DownloadFile Address="http://nuget.org/nuget.exe" FileName="$(MSBuildThisFileDirectory)nuget.exe" />
     </Target>
 
-
     <ItemGroup>
       <Projects Include="mcpp.vcxproj">
         <Properties>Configuration=Debug;Platform=Win32;DefaultPlatformToolset=$(DefaultPlatformToolset)</Properties>
@@ -63,7 +62,7 @@
     </Target>
 
     <PropertyGroup>
-        <PackageDirectory>packages\mcpp.$(DefaultPlatformToolset)</PackageDirectory>
+        <PackageDirectory>mcpp.$(DefaultPlatformToolset)</PackageDirectory>
     </PropertyGroup>
 
     <Target Name="NugetPack"
@@ -77,11 +76,11 @@
                      Properties="Configuration=Release;Platform=Win32;PackageDirectory=$(PackageDirectory);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
             <MSBuild Projects="mcpp.nuget.targets"
                      Properties="Configuration=Release;Platform=x64;PackageDirectory=$(PackageDirectory);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
-            <Copy SourceFiles="mcpp.$(DefaultPlatformToolset)\README.md"
+            <Copy SourceFiles="README.$(DefaultPlatformToolset).md"
+                  DestinationFiles="$(PackageDirectory)\README.md" />
+            <Copy SourceFiles="mcpp.$(DefaultPlatformToolset).nuspec"
                   DestinationFolder="$(PackageDirectory)" />
-            <Copy SourceFiles="mcpp.$(DefaultPlatformToolset)\mcpp.$(DefaultPlatformToolset).nuspec"
-                  DestinationFolder="$(PackageDirectory)" />
-            <Copy SourceFiles="mcpp.$(DefaultPlatformToolset)\mcpp.$(DefaultPlatformToolset).targets"
+            <Copy SourceFiles="mcpp.$(DefaultPlatformToolset).targets"
                   DestinationFolder="$(PackageDirectory)\build\native" />
             <Exec Command="$(MSBuildThisFileDirectory)nuget pack -NoPackageAnalysis -NonInteractive"
                   WorkingDirectory="$(PackageDirectory)"/>

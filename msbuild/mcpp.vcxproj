@@ -63,6 +63,7 @@
       <PreprocessorDefinitions>_WIN32_WINNT=0x600;WIN32_LEAN_AND_MEAN;_CONSOLE</PreprocessorDefinitions>
       <WarningLevel>Level3</WarningLevel>
       <DisableSpecificWarnings>4996;4244;4246;4267;4146;4018</DisableSpecificWarnings>
+      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">

@@ -3,7 +3,7 @@
         <Libraries Include="$(MSBuildThisFileDirectory)$(DefaultPlatformToolset)\$(Platform)\$(Configuration)\*.lib" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ItemGroup>
         <PDBs Include="$(MSBuildThisFileDirectory)$(DefaultPlatformToolset)\$(Platform)\$(Configuration)\*.pdb" />
     </ItemGroup>
 

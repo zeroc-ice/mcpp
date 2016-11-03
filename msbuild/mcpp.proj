@@ -37,6 +37,7 @@
     </Target>
 
     <ItemGroup>
+      <!-- Dynamic run-time library builds -->
       <Projects Include="mcpp.vcxproj">
         <Properties>Configuration=Debug;Platform=Win32;DefaultPlatformToolset=$(DefaultPlatformToolset)</Properties>
       </Projects>
@@ -48,6 +49,19 @@
       </Projects>
       <Projects Include="mcpp.vcxproj">
         <Properties>Configuration=Release;Platform=x64;DefaultPlatformToolset=$(DefaultPlatformToolset)</Properties>
+      </Projects>
+      <!-- Static run-time library builds -->
+      <Projects Include="mcpp.vcxproj">
+        <Properties>Configuration=Debug;Platform=Win32;DefaultPlatformToolset=$(DefaultPlatformToolset);StaticRuntimeLibrary=yes</Properties>
+      </Projects>
+      <Projects Include="mcpp.vcxproj">
+        <Properties>Configuration=Debug;Platform=x64;DefaultPlatformToolset=$(DefaultPlatformToolset);StaticRuntimeLibrary=yes</Properties>
+      </Projects>
+      <Projects Include="mcpp.vcxproj">
+        <Properties>Configuration=Release;Platform=Win32;DefaultPlatformToolset=$(DefaultPlatformToolset);StaticRuntimeLibrary=yes</Properties>
+      </Projects>
+      <Projects Include="mcpp.vcxproj">
+        <Properties>Configuration=Release;Platform=x64;DefaultPlatformToolset=$(DefaultPlatformToolset);StaticRuntimeLibrary=yes</Properties>
       </Projects>
     </ItemGroup>
 

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ProjectConfiguration Include="Debug|Win32">
@@ -22,33 +22,40 @@
     <ProjectGuid>{F22D082B-B83C-4DE1-AB1E-E82006982C8C}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup>
+    <RuntimeLibrary Condition="'$(Configuration)' == 'Debug' and '$(StaticRuntimeLibrary)' != 'yes'">MultiThreadedDebugDLL</RuntimeLibrary>
+    <RuntimeLibrary Condition="'$(Configuration)' == 'Release' and '$(StaticRuntimeLibrary)' != 'yes'">MultiThreadedDLL</RuntimeLibrary>
+    <RuntimeLibrary Condition="'$(Configuration)' == 'Debug' and '$(StaticRuntimeLibrary)' == 'yes'">MultiThreadedDebug</RuntimeLibrary>
+    <RuntimeLibrary Condition="'$(Configuration)' == 'Release' and '$(StaticRuntimeLibrary)' == 'yes'">MultiThreaded</RuntimeLibrary>
+    <TargetName Condition="'$(RuntimeLibrary)' == 'MultiThreadedDebugDLL'">mcppd</TargetName>
+    <TargetName Condition="'$(RuntimeLibrary)' == 'MultiThreadedDLL'">mcpp</TargetName>
+    <TargetName Condition="'$(RuntimeLibrary)' == 'MultiThreadedDebug'">mcppmtd</TargetName>
+    <TargetName Condition="'$(RuntimeLibrary)' == 'MultiThreaded'">mcppmt</TargetName>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
-    <TargetName>mcppd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
-    <TargetName>mcpp</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
-    <TargetName>mcppd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
-    <TargetName>mcpp</TargetName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <PropertyGroup>
-    <IntDir>$(DefaultPlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(RuntimeLibrary)' == 'MultiThreadedDebug' or '$(RuntimeLibrary)' == 'MultiThreaded'">$(DefaultPlatformToolset)\$(Platform)\$(Configuration)\mt\</IntDir>
+    <IntDir Condition="'$(RuntimeLibrary)' == 'MultiThreadedDebugDLL' or '$(RuntimeLibrary)' == 'MultiThreadedDLL'">$(DefaultPlatformToolset)\$(Platform)\$(Configuration)\md\</IntDir>
     <OutDir>$(DefaultPlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
@@ -61,18 +68,15 @@
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
     <ClCompile>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
     <ClCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <ProgramDataBaseFileName>
-      </ProgramDataBaseFileName>
-      <DebugInformationFormat Condition="'$(DefaultPlatformToolset)' != 'v100'">None</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <DebugInformationFormat Condition="'$(DefaultPlatformToolset)' != 'v100'">ProgramDatabase</DebugInformationFormat>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>

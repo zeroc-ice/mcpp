@@ -15,8 +15,8 @@ Simply type:
 ```  
 This creates a static library `libmcpp.a`. Depending on your platform, the library is created in the following directory:
 
-* `lib64` - Any Linux system with a `/usr/lib64` directory
-* `lib` - macOS, Linux without a `/usr/lib64` directory
+* `lib64` - Linux system with a `/usr/lib64` directory
+* `lib` - Linux system without a `/usr/lib64` directory, macOS
 
 ### Windows with Visual Studio
 
@@ -24,10 +24,9 @@ Open a Visual Studio Command Prompt, and type:
 ```
   MSbuild msbuild\mcpp.vcxproj
 ```
-This will create a static library `mcpp.lib` for Release configurations and `mcppd.lib` for Debug configurations,
-to build a different platform set the MSbuild Platform property likewise to build a different configuration set
-the MSbuild Configuration property.
+This creates a static library `mcpp.lib` for Release configurations and `mcppd.lib` for Debug configurations.
+You can select a specific Configuration (`Debug` or `Release`) and Platform (`Win32` or `x64`) as shown below:
 
 ```
-  MSbuild msbuild\mcpp.vcxproj /p:Configuration=Release /p:Platform=X64
+  MSbuild msbuild\mcpp.vcxproj /p:Configuration=Release /p:Platform=x64
 ```

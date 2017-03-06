@@ -24,7 +24,19 @@ ifeq ($(UNAME),Linux)
 
         ifeq ($(MACHINE),i686)
                 override CFLAGS += -m32
+                #
+                # Ubuntu.
+                #
+                ifeq ($(shell test -d /usr/lib/i386-linux-gnu && echo 0),0)
+                        LIBDIR = lib/i386-linux-gnu
+                endif
         else
+                #
+                # Ubuntu.
+                #
+                ifeq ($(shell test -d /usr/lib/x86_64-linux-gnu && echo 0),0)
+                        LIBDIR = lib/x86_64-linux-gnu
+                endif
                 #
                 # Rhel/SLES
                 #

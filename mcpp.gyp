@@ -13,6 +13,7 @@
         'support.c',
         'system.c',
       ],
+      'win_delay_load_hook' : 'false',
       'include_dirs' : ['.'],
       'defines' : [
         'HAVE_CONFIG_H',

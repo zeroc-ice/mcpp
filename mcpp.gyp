@@ -23,7 +23,26 @@
         'Release': {
           'msvs_settings': {
             'VCCLCompilerTool': {
-                'RuntimeLibrary': '2',
+                'RuntimeLibrary': '0',
+                'ExceptionHandling': '1',
+                'RuntimeTypeInfo' : 'true'
+              },
+          },
+          'msvs_disabled_warnings': [
+            4018,
+            4090,
+            4101,
+            4102,
+            4133,
+            4146,
+            4244,
+            4267
+          ]
+        },
+        'Debug': {
+          'msvs_settings': {
+            'VCCLCompilerTool': {
+                'RuntimeLibrary': '1',
                 'ExceptionHandling': '1',
                 'RuntimeTypeInfo' : 'true'
               },

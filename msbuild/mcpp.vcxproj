@@ -64,21 +64,39 @@
       <WarningLevel>Level3</WarningLevel>
       <DisableSpecificWarnings>4996;4244;4246;4267;4146;4018</DisableSpecificWarnings>
       <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName)-objs.pdb</ProgramDataBaseFileName>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
     <ClCompile>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <Optimization>Disabled</Optimization>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
     <ClCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
-      <DebugInformationFormat Condition="'$(DefaultPlatformToolset)' != 'v100'">ProgramDatabase</DebugInformationFormat>
     </ClCompile>
+  </ItemDefinitionGroup>
+  <!--
+      GenerateDebugInformation supported values change from v120 to v140 and v141,
+      we set it conditionally to the platform tool set.
+  -->
+  <ItemDefinitionGroup>
+    <Link>
+      <GenerateDebugInformation>Yes</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(DefaultPlatformToolset)'=='v140'">
+    <Link>
+      <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
+      <GenerateDebugInformation>Debug</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(DefaultPlatformToolset)'=='v141'">
+    <Link>
+      <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\directive.c" />

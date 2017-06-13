@@ -4,8 +4,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PDBs Include="$(MSBuildThisFileDirectory)$(DefaultPlatformToolset)\$(Platform)\$(Configuration)\*.pdb"
-              Exclude="$(MSBuildThisFileDirectory)$(DefaultPlatformToolset)\$(Platform)\$(Configuration)\*-objs.pdb" />
+        <PDBs Include="$(MSBuildThisFileDirectory)$(DefaultPlatformToolset)\$(Platform)\$(Configuration)\*.pdb" />
     </ItemGroup>
 
     <!-- Copy required files to the package specific directories -->

@@ -47,7 +47,7 @@ ifeq ($(UNAME),Linux)
 endif
 
 ifeq ($(UNAME),AIX)
-        CC ?= xlc_r
+        CC = xlc_r
 endif
 
 OBJS = directive.o eval.o expand.o main.o mbchar.o support.o system.o

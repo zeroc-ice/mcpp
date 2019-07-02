@@ -1,8 +1,6 @@
-# **********************************************************************
 #
-# Copyright (c) 2015-2017 ZeroC, Inc. All rights reserved.
+# Copyright (c) ZeroC, Inc. All rights reserved.
 #
-# **********************************************************************
 
 PREFIX ?= /opt/mcpp-2.7.2
 
@@ -54,8 +52,7 @@ OBJS = directive.o eval.o expand.o main.o mbchar.o support.o system.o
 
 $(LIBDIR)/libmcpp.a: $(OBJS)
 	-mkdir -p $(LIBDIR)
-	ar rcs $(LIBDIR)/libmcpp.a $(OBJS)
-	ranlib $(LIBDIR)/libmcpp.a
+	$(AR) rcs $(LIBDIR)/libmcpp.a $(OBJS)
 
 install: $(LIBDIR)/libmcpp.a
 	@mkdir -p $(PREFIX)/$(LIBDIR)

@@ -30,3 +30,6 @@ You can select a specific Configuration (`Debug` or `Release`) and Platform (`Wi
 ```
   MSbuild msbuild\mcpp.vcxproj /p:Configuration=Release /p:Platform=x64
 ```
+
+# Copyright & License
+Copyright ©2015-2021 ZeroC, Inc. All rights reserved. You may use this project under the terms of the MIT License. See 'LICENSE'.

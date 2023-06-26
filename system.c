@@ -37,6 +37,10 @@
  *      2. append the system-dependent routines in this file.
  */
 
+#ifndef _MSC_VER
+#  include <unistd.h> // For readlink()
+#endif
+
 #include    "system.H"
 #include    "internal.H"
 

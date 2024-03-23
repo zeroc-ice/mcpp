@@ -593,9 +593,9 @@ char *  scan_quote(
     const char * const      unterm_string
                         = "Unterminated string literal%s";
     const char * const      unterm_char
-                        = "Unterminated character constant %s%.0ld%s";
+                        = "Unterminated character constant%s";
     const char * const      empty_const
-                        = "Empty character constant %s%.0ld%s";
+                        = "Empty character constant%s";
     const char *    skip;
     size_t      len;
     int         c;
@@ -652,7 +652,7 @@ char *  scan_quote(
         if (diag && iscntrl( c) && ((char_type[ c] & SPA) == 0)
                 && (warn_level & 1))
             cwarn(
-            "Illegal control character %.0s0lx%02x in quotation"    /* _W1_ */
+            "Illegal control character %.0s0x%02lx in quotation"    /* _W1_ */
                     , NULL, (long) c, NULL);
         *out_p++ = c;
 chk_limit:
@@ -673,14 +673,14 @@ chk_limit:
             if (delim == '"') {
                 cerror( unterm_string, skip, 0L, NULL); /* _E_  */
             } else if (delim == '\'') {
-                cerror( unterm_char, out, 0L, skip);    /* _E_  */
+                cerror( unterm_char, skip, 0L, NULL);   /* _E_  */
             } else {
                 cerror( "Unterminated header name %s%.0ld%s"        /* _E_  */
                         , out, 0L, skip);
             }
             out_p = NULL;
         } else if (delim == '\'' && out_p - out <= 2) {
-            cerror( empty_const, out, 0L, skip);        /* _E_  */
+            cerror( empty_const, skip, 0L, NULL);       /* _E_  */
             out_p = NULL;
             goto  done;
         }
@@ -1158,7 +1158,7 @@ static char *   parse_line( void)
         default:
             if (iscntrl( c)) {
                 cerror(             /* Skip the control character   */
-    "Illegal control character %.0s0x%lx, skipped the character"    /* _E_  */
+    "Illegal control character %.0s0x%02lx, skipped the character"  /* _E_  */
                         , NULL, (long) c, NULL);
             } else {                        /* Any valid character  */
                 *tp++ = c;

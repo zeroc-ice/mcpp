@@ -18,7 +18,7 @@ add_library(mcpp STATIC
 	"eval.c"
 	"expand.c"
 	"internal.H"
-	"main.c"
+	"mcpp_main.c"
 	"mbchar.c"
 	"support.c"
 	"system.c"
@@ -32,9 +32,9 @@ target_sources(mcpp PUBLIC
 
 if(UNIX)
 	include(GNUInstallDirs)
-    
-	set_property(TARGET mcpp PROPERTY PUBLIC_HEADER 
-		"mcpp_lib.h" 
+
+	set_property(TARGET mcpp PROPERTY PUBLIC_HEADER
+		"mcpp_lib.h"
 		"mcpp_out.h"
 	)
 
@@ -56,7 +56,7 @@ if(UNIX)
 elseif(WIN32)
 	# define character set - not set, per shipped project files
 	add_definitions(-D_SBCS)
-    
+
 	target_compile_definitions(mcpp PRIVATE
 		"_WIN32_WINNT=0x600"
 		"WIN32_LEAN_AND_MEAN"

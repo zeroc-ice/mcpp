@@ -103,7 +103,7 @@
     <ClCompile Include="..\directive.c" />
     <ClCompile Include="..\eval.c" />
     <ClCompile Include="..\expand.c" />
-    <ClCompile Include="..\main.c" />
+    <ClCompile Include="..\mcpp_main.c" />
     <ClCompile Include="..\mbchar.c" />
     <ClCompile Include="..\support.c" />
     <ClCompile Include="..\system.c" />

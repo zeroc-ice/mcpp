@@ -94,7 +94,7 @@
 #define OP_LPA          2           /* (    */
 /* The following are unary.     */
 #define FIRST_UNOP      OP_PLU      /* First unary operator         */
-#define OP_PLU          3           /* +    */ 
+#define OP_PLU          3           /* +    */
 #define OP_NEG          4           /* -    */
 #define OP_COM          5           /* ~    */
 #define OP_NOT          6           /* !    */
@@ -320,7 +320,7 @@ extern struct std_limits_ {
         int     inc_nest;           /* Least maximum of include nest*/
         long    n_macro;            /* Least maximum of num of macro*/
         long    line_num;           /* Maximum source line number   */
-} std_limits;    
+} std_limits;
 /* The boolean flags specified by the execution options.    */
 extern struct option_flags_ {
         int     c;                  /* -C option (keep comments)    */
@@ -370,7 +370,7 @@ extern FILEINFO * sh_file;
 extern int      sh_line;
         /* Temporary buffer for directive line and macro expansion  */
 
-/* main.c   */
+/* mcpp_main.c   */
 extern void     un_predefine( int clearall);
                 /* Undefine predefined macros   */
 

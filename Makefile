@@ -48,7 +48,7 @@ ifeq ($(UNAME),AIX)
         CC ?= xlc_r
 endif
 
-OBJS = directive.o eval.o expand.o main.o mbchar.o support.o system.o
+OBJS = directive.o eval.o expand.o mcpp_main.o mbchar.o support.o system.o
 
 $(LIBDIR)/libmcpp.a: $(OBJS)
 	-mkdir -p $(LIBDIR)

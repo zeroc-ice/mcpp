@@ -9,7 +9,7 @@ if(NOT CMAKE_DEBUG_POSTFIX)
 	set(CMAKE_DEBUG_POSTFIX d)
 endif()
 
-project(mcpp VERSION 2.7.2.14)
+project(mcpp VERSION 2.7.2.18)
 
 add_library(mcpp STATIC
 	"config.h"

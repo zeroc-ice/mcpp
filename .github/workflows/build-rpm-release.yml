@@ -37,7 +37,7 @@ jobs:
             -v "$GITHUB_WORKSPACE:/workspace" \
             -e MCPP_VERSION="${{ inputs.mcpp_version }}" \
             -e GIT_TAG="${{ github.ref_name }}" \
-            -e RPM_TARGET_ARCH="${{ matrix.arch }}" \
+            -e BUILD_ARCH="${{ matrix.arch }}" \
             mcpp-rpm-package-builder /workspace/mcpp/packaging/rpm/build-package.sh
 
       - name: Upload Artifacts

@@ -19,10 +19,10 @@ if [[ -n "${MCPP_VERSION:-}" ]]; then
     sed -i "s/^Version:.*/Version: $MCPP_VERSION/" "$MCPP_SPEC_DEST"
 fi
 
-# Validate RPM_TARGET_ARCH
+# Validate BUILD_ARCH
 VALID_ARCHS=("x86_64" "i686" "aarch64")
-if [[ -z "${RPM_TARGET_ARCH:-}" || ! " ${VALID_ARCHS[@]} " =~ " ${RPM_TARGET_ARCH} " ]]; then
-    echo "Error: RPM_TARGET_ARCH is not set or invalid. Use one of: ${VALID_ARCHS[*]}"
+if [[ -z "${BUILD_ARCH:-}" || ! " ${VALID_ARCHS[@]} " =~ " ${BUILD_ARCH} " ]]; then
+    echo "Error: BUILD_ARCH is not set or invalid. Use one of: ${VALID_ARCHS[*]}"
     exit 1
 fi
 
@@ -40,7 +40,7 @@ cd "$RPM_BUILD_ROOT/SOURCES"
 spectool -g "${RPM_MACROS[@]}" "$MCPP_SPEC_DEST" || { echo "Error: Failed to download sources."; exit 1; }
 
 # Build source RPM
-rpmbuild -bs "$MCPP_SPEC_DEST" "${RPM_MACROS[@]}" --target="$RPM_TARGET_ARCH"
+rpmbuild -bs "$MCPP_SPEC_DEST" "${RPM_MACROS[@]}" --target="$BUILD_ARCH"
 
 # Build binary RPM
-rpmbuild -bb "$MCPP_SPEC_DEST" "${RPM_MACROS[@]}" --target="$RPM_TARGET_ARCH"
+rpmbuild -bb "$MCPP_SPEC_DEST" "${RPM_MACROS[@]}" --target="$BUILD_ARCH"

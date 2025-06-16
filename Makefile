@@ -14,38 +14,38 @@ MACHINE = $(shell uname -m)
 LIBDIR = lib
 
 ifeq ($(UNAME),Darwin)
-        override CFLAGS += -mmacosx-version-min=10.9
+    override CFLAGS += -mmacosx-version-min=10.9
 endif
 
 ifeq ($(UNAME),Linux)
-        override CFLAGS += -fPIC -Wno-maybe-uninitialized -Wno-implicit-function-declaration -Wno-unused-result
+    override CFLAGS += -fPIC -Wno-maybe-uninitialized -Wno-implicit-function-declaration -Wno-unused-result
 
-        ifeq ($(MACHINE),i686)
-                override CFLAGS += -m32
-                #
-                # Ubuntu.
-                #
-                ifeq ($(shell test -d /usr/lib/i386-linux-gnu && echo 0),0)
-                        LIBDIR = lib/i386-linux-gnu
-                endif
-        else
-                #
-                # Ubuntu.
-                #
-                ifeq ($(shell test -d /usr/lib/x86_64-linux-gnu && echo 0),0)
-                        LIBDIR = lib/x86_64-linux-gnu
-                endif
-                #
-                # Rhel/SLES
-                #
-                ifeq ($(shell test -d /usr/lib64 && echo 0),0)
-                        LIBDIR = lib64
-                endif
+    ifneq ($(filter i686,$(MACHINE) $(BUILD_ARCH)),)
+        override CFLAGS += -m32
+        #
+        # Ubuntu.
+        #
+        ifeq ($(shell test -d /usr/lib/i386-linux-gnu && echo 0),0)
+            LIBDIR = lib/i386-linux-gnu
         endif
+    else
+        #
+        # Ubuntu.
+        #
+        ifeq ($(shell test -d /usr/lib/x86_64-linux-gnu && echo 0),0)
+            LIBDIR = lib/x86_64-linux-gnu
+        endif
+        #
+        # Rhel/SLES
+        #
+        ifeq ($(shell test -d /usr/lib64 && echo 0),0)
+            LIBDIR = lib64
+        endif
+    endif
 endif
 
 ifeq ($(UNAME),AIX)
-        CC ?= xlc_r
+    CC ?= xlc_r
 endif
 
 OBJS = directive.o eval.o expand.o mcpp_main.o mbchar.o support.o system.o

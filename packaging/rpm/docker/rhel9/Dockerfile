@@ -14,11 +14,11 @@ RUN dnf install --setopt=multilib_policy=all -y \
     libstdc++-static && \
     dnf clean all
 
-# Copy Ice spec file into the container
+# Copy MCPP spec file into the container
 COPY packaging/rpm/mcpp.spec /usr/src/mcpp.spec
 
 # Install build dependencies. Do not use dnf builddep as it doesn't obey multilib_policy=all.
-RUN rpmspec --parse /usr/src/ice.spec 2>/dev/null | \
+RUN rpmspec --parse /usr/src/mcpp.spec 2>/dev/null | \
     grep '^BuildRequires:' | \
     sed -E 's/BuildRequires:\s*//' | \
     tr ',' '\n' | awk '{print $1}' | sort -u > /tmp/dependencies.txt && \

@@ -2,6 +2,11 @@ name: "Build RPM Packages"
 
 on:
   workflow_call:
+    inputs:
+      mcpp_version:
+        description: "The MCPP version to build"
+        required: false
+        type: string
 
 jobs:
   build:
@@ -18,3 +23,15 @@ jobs:
 
           - distribution: rhel9
             arch: aarch64
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          path: mcpp
+
+      - name: Call Build RPM Package Action
+        uses: ./mcpp/.github/actions/build-rpm-package
+        with:
+          ice_version: ${{ inputs.mcpp_version || '' }}
+          distribution: ${{ matrix.distribution }}
+          arch: ${{ matrix.arch }}

@@ -56,7 +56,6 @@ cat << "EOF" > %{buildroot}%{_libdir}/pkgconfig/mcpp.pc
 prefix=/usr
 exec_prefix=${prefix}
 libdir=%{_libdir}
-chmod 644 %{buildroot}%{_libdir}/pkgconfig/mcpp.pc
 
 Name: mcpp
 Version: %{version}

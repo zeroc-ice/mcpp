@@ -1,12 +1,11 @@
 name: "Build RPM Packages"
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       mcpp_version:
         description: "The MCPP version to build"
         required: false
-        type: string
 
 jobs:
   build:

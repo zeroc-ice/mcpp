@@ -1,12 +1,11 @@
 name: "Build RPM Packages"
 
 on:
+  push:
+    # Run on version tags
+    tags:
+      - "v[0-9]*"
   workflow_dispatch:
-    on:
-      push:
-        # Run on version tags
-        tags:
-          - "v[0-9]*"
     inputs:
       mcpp_version:
         description: "The MCPP version to build"

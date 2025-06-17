@@ -3,12 +3,12 @@
 #
 
 # the github version tag without v prefix
-%define git_tag_version 2.7.2.14
+%define git_tag_version 2.7.2.19
 
 Summary: mcpp, a portable C/C++ preprocessor
 Name: mcpp-devel
 Version: 2.7.2
-Release: 15ice%{?dist}
+Release: 19ice%{?dist}
 Source: https://github.com/zeroc-ice/mcpp/archive/v%{git_tag_version}/mcpp-%{version}.tar.gz
 URL: http://mcpp.sourceforge.net/
 License: BSD
@@ -70,6 +70,9 @@ EOF
 %{_libdir}/pkgconfig/mcpp.pc
 
 %changelog
+* Tue Jun 17 2025 Jose Gutierrez de la Concha  <jose@zeroc.com> 2.7.2-19ice
+- Add support for Red Hat 10 platforms
+
 * Wed Apr 8 2020 Benoit Foucher <benoit@zeroc.com> 2.7.2-15ice
 - x86 multilib build for EL8 platforms
 

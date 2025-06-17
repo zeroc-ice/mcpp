@@ -26,7 +26,10 @@ jobs:
           path: mcpp
 
       - name: Build Docker Image
-        run: docker build --pull -f mcpp/packaging/rpm/docker/${{ matrix.distribution }}/Dockerfile -t mcpp-rpm-package-builder "$GITHUB_WORKSPACE/mcpp"
+        run: |
+          docker build --pull -f mcpp/packaging/rpm/docker/${{ matrix.distribution }}/Dockerfile \
+            -t mcpp-rpm-package-builder-${{matrix.arch}}-${{matrix.distribution}} "$GITHUB_WORKSPACE/mcpp"
+        if: ${{ matrix.distribution == 'rhel10' }}
 
       - name: Build RPM Packages
         run: |
@@ -35,7 +38,8 @@ jobs:
             -e MCPP_VERSION="${{ inputs.mcpp_version }}" \
             -e GIT_TAG="${{ github.ref_name }}" \
             -e BUILD_ARCH="${{ matrix.arch }}" \
-            mcpp-rpm-package-builder /workspace/mcpp/packaging/rpm/build-package.sh
+            mcpp-rpm-package-builder-${{matrix.arch}}-${{matrix.distribution}} \
+            /workspace/mcpp/packaging/rpm/build-package.sh
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4

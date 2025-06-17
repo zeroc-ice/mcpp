@@ -15,7 +15,7 @@ RUN dnf install --setopt=multilib_policy=all -y \
     dnf clean all
 
 # Copy MCPP spec file into the container
-COPY packaging/rpm/mcpp.spec /usr/src/mcpp.spec
+COPY mcpp/packaging/rpm/mcpp.spec /usr/src/mcpp.spec
 
 # Install build dependencies. Do not use dnf builddep as it doesn't obey multilib_policy=all.
 RUN rpmspec --parse /usr/src/mcpp.spec 2>/dev/null | \
@@ -25,3 +25,6 @@ RUN rpmspec --parse /usr/src/mcpp.spec 2>/dev/null | \
     dnf install --setopt=multilib_policy=all -y $(cat /tmp/dependencies.txt) && \
     rm -f /tmp/dependencies.txt /usr/src/mcpp.spec && \
     dnf clean all
+
+LABEL org.opencontainers.image.source=https://github.com/zeroc-ice/mcpp
+LABEL org.opencontainers.image.description="MCPP Red Hat Enterprise Linux 10 Docker image for building RPM packages"

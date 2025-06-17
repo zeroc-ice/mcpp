@@ -35,10 +35,6 @@ jobs:
             image: ghcr.io/zeroc-ice/mcpp-rpm-package-builder-x86_64-rhel10:latest
 
           - distribution: rhel10
-            arch: i686
-            image: ghcr.io/zeroc-ice/mcpp-rpm-package-builder-x86_64-rhel10:latest
-
-          - distribution: rhel10
             arch: aarch64
             image: ghcr.io/zeroc-ice/mcpp-rpm-package-builder-aarch64-rhel10:latest
     steps:

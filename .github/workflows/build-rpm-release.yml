@@ -2,6 +2,11 @@ name: "Build RPM Packages"
 
 on:
   workflow_dispatch:
+    on:
+      push:
+        # Run on version tags
+        tags:
+          - "v[0-9]*"
     inputs:
       mcpp_version:
         description: "The MCPP version to build"
@@ -19,11 +24,19 @@ jobs:
             image: ghcr.io/zeroc-ice/mcpp-rpm-package-builder-x86_64-rhel9:latest
 
           - distribution: rhel9
+            arch: i686
+            image: ghcr.io/zeroc-ice/mcpp-rpm-package-builder-x86_64-rhel9:latest
+
+          - distribution: rhel9
             arch: aarch64
             image: ghcr.io/zeroc-ice/mcpp-rpm-package-builder-aarch64-rhel9:latest
 
           - distribution: rhel10
             arch: x86_64
+            image: ghcr.io/zeroc-ice/mcpp-rpm-package-builder-x86_64-rhel10:latest
+
+          - distribution: rhel10
+            arch: i686
             image: ghcr.io/zeroc-ice/mcpp-rpm-package-builder-x86_64-rhel10:latest
 
           - distribution: rhel10

@@ -16,20 +16,24 @@ jobs:
         include:
           - distribution: rhel9
             arch: x86_64
+            image: ghcr.io/zeroc-ice/mcpp-rpm-package-builder-x86_64-rhel9:latest
 
           - distribution: rhel9
             arch: aarch64
+            image: ghcr.io/zeroc-ice/mcpp-rpm-package-builder-aarch64-rhel9:latest
+
+          - distribution: rhel10
+            arch: x86_64
+            image: ghcr.io/zeroc-ice/mcpp-rpm-package-builder-x86_64-rhel10:latest
+
+          - distribution: rhel10
+            arch: aarch64
+            image: ghcr.io/zeroc-ice/mcpp-rpm-package-builder-aarch64-rhel10:latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
           path: mcpp
-
-      - name: Build Docker Image
-        run: |
-          docker build --pull -f mcpp/packaging/rpm/docker/${{ matrix.distribution }}/Dockerfile \
-            -t mcpp-rpm-package-builder-${{matrix.arch}}-${{matrix.distribution}} "$GITHUB_WORKSPACE/mcpp"
-        if: ${{ matrix.distribution == 'rhel10' }}
 
       - name: Build RPM Packages
         run: |
@@ -38,7 +42,7 @@ jobs:
             -e MCPP_VERSION="${{ inputs.mcpp_version }}" \
             -e GIT_TAG="${{ github.ref_name }}" \
             -e BUILD_ARCH="${{ matrix.arch }}" \
-            mcpp-rpm-package-builder-${{matrix.arch}}-${{matrix.distribution}} \
+            ${{matrix.image}} \
             /workspace/mcpp/packaging/rpm/build-package.sh
 
       - name: Upload Artifacts

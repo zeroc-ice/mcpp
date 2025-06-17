@@ -35,6 +35,9 @@ jobs:
         with:
           path: mcpp
 
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u zeroc-ice --password-stdin
+
       - name: Build RPM Packages
         run: |
           docker run --rm \

@@ -58,7 +58,7 @@ jobs:
             -v "$GITHUB_WORKSPACE:/workspace" \
             -e GPG_KEY="${{ secrets.ICE_3_8_CI_SIGNER_KEY }}" \
             -e GPG_KEY_ID="${{ secrets.ICE_3_8_CI_SIGNER_KEY_ID }}" \
-            ghcr.io/zeroc-ice/rpm-signer:latest \
+            ghcr.io/zeroc-ice/rpm-repo-builder:latest \
             /usr/local/bin/rpm-sign /workspace/build/RPMS
 
       - name: Upload Artifacts

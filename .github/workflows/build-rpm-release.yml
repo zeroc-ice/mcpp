@@ -23,10 +23,6 @@ jobs:
             image: ghcr.io/zeroc-ice/mcpp-rpm-package-builder-x86_64-rhel9:latest
 
           - distribution: rhel9
-            arch: i686
-            image: ghcr.io/zeroc-ice/mcpp-rpm-package-builder-x86_64-rhel9:latest
-
-          - distribution: rhel9
             arch: aarch64
             image: ghcr.io/zeroc-ice/mcpp-rpm-package-builder-aarch64-rhel9:latest
 
@@ -55,6 +51,15 @@ jobs:
             -e BUILD_ARCH="${{ matrix.arch }}" \
             ${{matrix.image}} \
             /workspace/mcpp/packaging/rpm/build-package.sh
+
+      - name: Sign RPM packages
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:/workspace" \
+            -e GPG_KEY="${{ secrets.ICE_3_8_CI_SIGNER_KEY }}" \
+            -e GPG_KEY_ID="${{ secrets.ICE_3_8_CI_SIGNER_KEY_ID }}" \
+            ghcr.io/zeroc-ice/rpm-signer:latest \
+            /usr/local/bin/rpm-sign /workspace/build/RPMS
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4

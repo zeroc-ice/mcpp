@@ -1738,7 +1738,7 @@ static int  open_file(
     if (! fullname)                 /* Non-existent or directory    */
         return  FALSE;
     if (included( fullname))        /* Once included    */
-        goto  true;
+        goto  exit_success;
 
     if ((max_open != 0 && max_open <= include_nest)
                             /* Exceed the known limit of open files */
@@ -1765,12 +1765,12 @@ static int  open_file(
         if ((fp = mcpp_fopen( fullname, "r")) == NULL) {
             file->fp = mcpp_fopen( cur_fullname, "r");
             fseek( file->fp, file->pos, SEEK_SET);
-            goto  false;
+            goto  exit_fail;
         }
         if (max_open == 0)      /* Remember the limit of the system */
             max_open = include_nest;
     } else if (fp == NULL)                  /* No read permission   */
-        goto  false;
+        goto  exit_fail;
     /* Truncate buffer of the includer to save memory   */
     len = (int) (file->bptr - file->buffer);
     if (len) {
@@ -1802,9 +1802,9 @@ static int  open_file(
     if (mkdep && ((mkdep & MD_SYSHEADER) || ! infile->sys_header))
         put_depend( fullname);          /* Output dependency line   */
 
-true:
+exit_success:
     return  TRUE;
-false:
+exit_fail:
     free( fullname);
     return  FALSE;
 }

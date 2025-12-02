@@ -18,7 +18,7 @@ let package = Package(
             path: "./",
             publicHeadersPath: ".",
             cSettings: [
-                .unsafeFlags(["-Wno-implicit-function-declaration", "-Wno-deprecated-non-prototype"])
+                .unsafeFlags(["-Wno-implicit-function-declaration", "-Wno-deprecated-non-prototype", "-fno-common"])
             ]
         )
     ]

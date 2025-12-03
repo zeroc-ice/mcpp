@@ -302,7 +302,7 @@ int     mcpp_lib_main
     inc_dirp = &null;   /* Initialize to current (null) directory   */
     cur_fname = cur_fullname = "(predefined)";  /* For predefined macros    */
     init_defines();                         /* Predefine macros     */
-    mb_init(TRUE);      /* Should be initialized prior to get options   */
+    mb_init();      /* Should be initialized prior to get options   */
     do_options( argc, argv, &in_file, &out_file);   /* Command line options */
 
     /* Open input file, "-" means stdin.    */

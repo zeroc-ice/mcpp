@@ -49,13 +49,10 @@ jobs:
         run: |
           docker run --rm \
             -v "$GITHUB_WORKSPACE:/workspace" \
-            -e GPG_KEY="${GPG_KEY}" \
-            -e GPG_KEY_ID="${GPG_KEY_ID}" \
-            ghcr.io/zeroc-ice/rpm-repo-builder:latest \
-            /usr/local/bin/rpm-sign /workspace/build/RPMS
-        env:
-          GPG_KEY: ${{ inputs.channel == '3.7' && secrets.ICE_3_7_CI_SIGNER_KEY || secrets.ICE_3_8_CI_SIGNER_KEY }}
-          GPG_KEY_ID: ${{ inputs.channel == '3.7' && secrets.ICE_3_7_CI_SIGNER_KEY_ID || secrets.ICE_3_8_CI_SIGNER_KEY_ID }}
+            -e GPG_KEY="${{ secrets.ICE_3_7_CI_SIGNER_KEY }}" \
+            -e GPG_KEY_ID="${{ secrets.ICE_3_7_CI_SIGNER_KEY_ID }}" \
+            ghcr.io/zeroc-ice/ice-rpm-builder-${{ matrix.distribution }}:${{ inputs.channel }} \
+            /workspace/mcpp/packaging/rpm/sign-package.sh
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4

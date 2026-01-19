@@ -1,6 +1,6 @@
 # MCPP.V143
 
-This package contains debug and release builds of the mcpp 2.7.2 static library. It was built with Visual Studio 2022.
+This package contains debug and release builds of the mcpp 2.7.4 static library. It was built with Visual Studio 2022.
 
 ## Source
 

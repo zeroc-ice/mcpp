@@ -81,22 +81,22 @@
 
     <Target Name="NugetPack"
             DependsOnTargets="Build">
-            <RemoveDir Directories="$(PackageName)" />
+            <RemoveDir Directories="build\$(PackageName)" />
             <MSBuild Projects="mcpp.nuget.targets"
-                     Properties="Configuration=Debug;Platform=Win32;PackageDirectory=$(PackageName);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
+                     Properties="Configuration=Debug;Platform=Win32;PackageDirectory=build\$(PackageName);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
             <MSBuild Projects="mcpp.nuget.targets"
-                     Properties="Configuration=Debug;Platform=x64;PackageDirectory=$(PackageName);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
+                     Properties="Configuration=Debug;Platform=x64;PackageDirectory=build\$(PackageName);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
             <MSBuild Projects="mcpp.nuget.targets"
-                     Properties="Configuration=Release;Platform=Win32;PackageDirectory=$(PackageName);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
+                     Properties="Configuration=Release;Platform=Win32;PackageDirectory=build\$(PackageName);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
             <MSBuild Projects="mcpp.nuget.targets"
-                     Properties="Configuration=Release;Platform=x64;PackageDirectory=$(PackageName);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
-            <Copy SourceFiles="README.$(PackageName).md"
-                  DestinationFiles="$(PackageName)\README.md" />
-            <Copy SourceFiles="$(PackageName).nuspec"
-                  DestinationFolder="$(PackageName)" />
-            <Copy SourceFiles="$(PackageName).targets"
-                  DestinationFolder="$(PackageName)\build\native" />
+                     Properties="Configuration=Release;Platform=x64;PackageDirectory=build\$(PackageName);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
+            <Copy SourceFiles="$(PackageName)\README.md"
+                  DestinationFolder="build\$(PackageName)" />
+            <Copy SourceFiles="$(PackageName)\$(PackageName).nuspec"
+                  DestinationFolder="build\$(PackageName)" />
+            <Copy SourceFiles="$(PackageName)\$(PackageName).targets"
+                  DestinationFolder="build\$(PackageName)\build\native" />
             <Exec Command="$(MSBuildThisFileDirectory)nuget pack -NoPackageAnalysis -NonInteractive"
-                  WorkingDirectory="$(PackageName)"/>
+                  WorkingDirectory="build\$(PackageName)"/>
     </Target>
 </Project>

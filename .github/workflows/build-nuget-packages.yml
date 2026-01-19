@@ -50,4 +50,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: nuget-package-${{ matrix.package }}
-          path: msbuild/${{ matrix.package }}/*.nupkg
+          path: msbuild/build/${{ matrix.package }}/*.nupkg

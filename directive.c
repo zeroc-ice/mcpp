@@ -820,6 +820,7 @@ static int  get_repl(
     int     token_type;                     /* Type of token        */
     char *  temp;
     char *  repl_cur = repl_base;   /* Pointer into repl-text buffer*/
+    char *  repl_min = repl_base;   /* Pointer into repl-text buffer*/
 
     *repl_cur = EOS;
     token_p = NULL;
@@ -892,7 +893,9 @@ static int  get_repl(
                 if ((temp = mgtoken_save( macroname)) != NULL)
                     repl_cur = temp;        /* Macro name           */
             } else {                        /* Parameter name       */
-                repl_cur = temp;
+                /* Formal parameter numbers can look like a '\t' or */
+                /* ' ' when removing trailing spaces, set repl_min. */
+                repl_min = repl_cur = temp;
             }
             break;
 
@@ -912,7 +915,7 @@ static int  get_repl(
         }
     }
 
-    while (repl_base < repl_cur
+    while (repl_min < repl_cur
             && (*(repl_cur - 1) == ' ' || *(repl_cur - 1) == '\t'))
         repl_cur--;                     /* Remove trailing spaces   */
     *repl_cur = EOS;                        /* Terminate work       */

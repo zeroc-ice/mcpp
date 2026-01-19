@@ -3,12 +3,12 @@
 #
 
 # the github version tag without v prefix
-%define git_tag_version 2.7.2.19
+%define git_tag_version 2.7.4
 
 Summary: mcpp, a portable C/C++ preprocessor
 Name: mcpp-devel
-Version: 2.7.2
-Release: 19ice%{?dist}
+Version: 2.7.4
+Release: 1ice%{?dist}
 Source: https://github.com/zeroc-ice/mcpp/archive/v%{git_tag_version}/mcpp-%{version}.tar.gz
 URL: http://mcpp.sourceforge.net/
 License: BSD
@@ -70,6 +70,10 @@ EOF
 %{_libdir}/pkgconfig/mcpp.pc
 
 %changelog
+* Sun Jan 19 2026 Jose Gutierrez de la Concha  <jose@zeroc.com> 2.7.4-1ice
+- Fix heap-use-after-free in substitute() (issue #9)
+- Fix heap-based buffer overflow in do_msg() (issue #10)
+
 * Tue Jun 17 2025 Jose Gutierrez de la Concha  <jose@zeroc.com> 2.7.2-19ice
 - Add support for Red Hat 10 platforms
 

@@ -27,18 +27,16 @@ jobs:
         include:
           - distribution: rhel9
             arch: x86_64
-            image: ghcr.io/zeroc-ice/ice-rpm-package-builder-x86_64-rhel9:latest
 
           - distribution: rhel9
             arch: aarch64
-            image: ghcr.io/zeroc-ice/ice-rpm-package-builder-aarch64-rhel9:latest
+
           - distribution: rhel10
             arch: x86_64
             image: ghcr.io/zeroc-ice/ice-rpm-package-builder-x86_64-rhel10:latest
 
           - distribution: rhel10
             arch: aarch64
-            image: ghcr.io/zeroc-ice/ice-rpm-package-builder-aarch64-rhel10:latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -55,7 +53,7 @@ jobs:
             -e MCPP_VERSION="${{ inputs.mcpp_version }}" \
             -e GIT_TAG="${{ github.ref_name }}" \
             -e BUILD_ARCH="${{ matrix.arch }}" \
-            ${{ matrix.image }} \
+            ghcr.io/zeroc-ice/ice-rpm-builder-${{ matrix.distribution }}:${{ inputs.channel }}  \
             /workspace/mcpp/packaging/rpm/build-package.sh
 
       - name: Sign RPM packages

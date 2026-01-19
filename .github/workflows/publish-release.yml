@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       channel:
-        description: "The release channel (e.g., 2.7, 2.8)"
+        description: "The release channel (e.g., 3.7, 3.8)"
         required: true
       quality:
         description: "Release quality (e.g., stable, nightly, RC)"

@@ -23,7 +23,7 @@ on:
         description: "The MCPP version to build (leave empty for stable)"
         required: false
       channel:
-        description: "The release channel (e.g., 2.7, 3.7)"
+        description: "The release channel (e.g., 3.7, 3.8)"
         required: true
       quality:
         description: "Release quality (e.g., stable, nightly, RC)"

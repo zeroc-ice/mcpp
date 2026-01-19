@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    name: Build on ${{ matrix.name }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Rocky Linux 9
+            image: rockylinux:9
+            install_cmd: dnf install -y cmake gcc gcc-c++ make
+
+          - name: Debian 13 (trixie)
+            image: debian:trixie
+            install_cmd: apt-get update && apt-get install -y cmake gcc g++ make
+
+          - name: AlmaLinux latest
+            image: almalinux:latest
+            install_cmd: dnf install -y cmake gcc gcc-c++ make
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build in Docker
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}:/workspace" \
+            -w /workspace \
+            ${{ matrix.image }} \
+            sh -c "${{ matrix.install_cmd }} && cmake -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build --verbose"
+
+  build-windows:
+    name: Build on Windows (${{ matrix.arch }})
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x64, Win32]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: |
+          cmake -B build -A ${{ matrix.arch }}
+          cmake --build build --config Release --verbose
+
+  build-macos:
+    name: Build on macOS
+    runs-on: macos-15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --verbose

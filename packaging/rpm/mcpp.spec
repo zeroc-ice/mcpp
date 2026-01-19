@@ -75,8 +75,8 @@ EOF
 
 %changelog
 * Sun Jan 19 2026 Jose Gutierrez de la Concha  <jose@zeroc.com> 2.7.4-1ice
-- Fix heap-use-after-free in substitute() (issue #9)
-- Fix heap-based buffer overflow in do_msg() (issue #10)
+- Fix heap-use-after-free in substitute() (https://github.com/zeroc-ice/mcpp/issues/9)
+- Fix heap-based buffer overflow in do_msg() (https://github.com/zeroc-ice/mcpp/issues/10)
 
 * Tue Jun 17 2025 Jose Gutierrez de la Concha  <jose@zeroc.com> 2.7.2-19ice
 - Add support for Red Hat 10 platforms

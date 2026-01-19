@@ -24,19 +24,8 @@ jobs:
     runs-on: ${{ matrix.arch == 'aarch64' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
     strategy:
       matrix:
-        include:
-          - distribution: rhel9
-            arch: x86_64
-
-          - distribution: rhel9
-            arch: aarch64
-
-          - distribution: rhel10
-            arch: x86_64
-            image: ghcr.io/zeroc-ice/ice-rpm-package-builder-x86_64-rhel10:latest
-
-          - distribution: rhel10
-            arch: aarch64
+        distribution: [el9, el10]
+        arch: [x86_64, aarch64]
     steps:
       - name: Check out repository
         uses: actions/checkout@v4

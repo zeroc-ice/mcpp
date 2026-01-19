@@ -1,0 +1,65 @@
+name: "Build NuGet Packages"
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build:
+    name: "Build NuGet Package (${{ matrix.package }})"
+    runs-on: windows-2022
+    strategy:
+      matrix:
+        include:
+          - package: v142
+            toolset: v142
+
+          - package: v143
+            toolset: v143
+
+          - package: ZeroC.Mcpp
+            toolset: v143
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Install MSVC v142 toolset
+        if: matrix.toolset == 'v142'
+        shell: pwsh
+        run: |
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $vsInstaller = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vs_installer.exe"
+
+          $installPath = & $vswhere -latest -products * -property installationPath
+          if (-not $installPath) { throw "Visual Studio installation not found." }
+
+          # v142 toolset component group ID (VS2019 toolset)
+          & $vsInstaller modify --installPath "$installPath" `
+            --add Microsoft.VisualStudio.ComponentGroup.VC.Tools.142.x86.x64 `
+            --quiet --wait --norestart
+
+      - name: Build NuGet Package
+        working-directory: msbuild
+        run: MSBuild mcpp.proj /t:NugetPack /p:DefaultPlatformToolset=${{ matrix.toolset }}
+
+      - name: Rename package directory for ZeroC.Mcpp
+        if: matrix.package == 'ZeroC.Mcpp'
+        working-directory: msbuild
+        run: |
+          Remove-Item -Path "ZeroC.Mcpp" -Recurse -Force -ErrorAction SilentlyContinue
+          Rename-Item -Path "mcpp.v143" -NewName "ZeroC.Mcpp"
+          Copy-Item -Path "README.ZeroC.Mcpp.md" -Destination "ZeroC.Mcpp\README.md" -Force
+          Copy-Item -Path "ZeroC.Mcpp.nuspec" -Destination "ZeroC.Mcpp\" -Force
+          Copy-Item -Path "ZeroC.Mcpp.targets" -Destination "ZeroC.Mcpp\build\native\" -Force
+          nuget pack ZeroC.Mcpp\ZeroC.Mcpp.nuspec -NoPackageAnalysis -NonInteractive -OutputDirectory ZeroC.Mcpp
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-package-${{ matrix.package }}
+          path: |
+            msbuild/${{ matrix.package == 'ZeroC.Mcpp' && 'ZeroC.Mcpp' || format('mcpp.{0}', matrix.toolset) }}/*.nupkg

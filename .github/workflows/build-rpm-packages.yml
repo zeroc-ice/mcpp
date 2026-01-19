@@ -1,15 +1,22 @@
 name: "Build RPM Packages"
 
 on:
-  push:
-    # Run on version tags
-    tags:
-      - "v[0-9]*"
   workflow_dispatch:
     inputs:
       mcpp_version:
         description: "The MCPP version to build"
         required: false
+      channel:
+        description: "The release channel (e.g., 3.7, 3.8)"
+        required: true
+  workflow_call:
+    inputs:
+      mcpp_version:
+        required: false
+        type: string
+      channel:
+        required: true
+        type: string
 
 jobs:
   build:
@@ -56,10 +63,13 @@ jobs:
         run: |
           docker run --rm \
             -v "$GITHUB_WORKSPACE:/workspace" \
-            -e GPG_KEY="${{ secrets.ICE_3_8_CI_SIGNER_KEY }}" \
-            -e GPG_KEY_ID="${{ secrets.ICE_3_8_CI_SIGNER_KEY_ID }}" \
+            -e GPG_KEY="${GPG_KEY}" \
+            -e GPG_KEY_ID="${GPG_KEY_ID}" \
             ghcr.io/zeroc-ice/rpm-repo-builder:latest \
             /usr/local/bin/rpm-sign /workspace/build/RPMS
+        env:
+          GPG_KEY: ${{ inputs.channel == '3.7' && secrets.ICE_3_7_CI_SIGNER_KEY || secrets.ICE_3_8_CI_SIGNER_KEY }}
+          GPG_KEY_ID: ${{ inputs.channel == '3.7' && secrets.ICE_3_7_CI_SIGNER_KEY_ID || secrets.ICE_3_8_CI_SIGNER_KEY_ID }}
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4

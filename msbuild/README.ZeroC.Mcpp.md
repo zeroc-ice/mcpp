@@ -1,6 +1,6 @@
-# MCPP.V140
+# ZeroC.Mcpp
 
-This package contains debug and release builds of the mcpp 2.7.2 static library. It was built with Visual Studio 2015 (V140).
+This package contains debug and release builds of the mcpp 2.7.4 static library. It was built with Visual Studio 2022 and supports both v142 and v143 platform toolsets.
 
 ## Source
 

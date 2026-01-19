@@ -2,14 +2,18 @@
 # Copyright (c) ZeroC, Inc. All rights reserved.
 #
 
-# the github version tag without v prefix
-%define git_tag_version 2.7.4
+# git_tag, when defined, is typically a branch or tag, for example master or v2.7.4
+%if 0%{?git_tag:1}
+   %define archive_tag %{git_tag}
+%else
+   %define archive_tag master
+%endif
 
 Summary: mcpp, a portable C/C++ preprocessor
 Name: mcpp-devel
 Version: 2.7.4
 Release: 1ice%{?dist}
-Source: https://github.com/zeroc-ice/mcpp/archive/v%{git_tag_version}/mcpp-%{version}.tar.gz
+Source: https://github.com/zeroc-ice/mcpp/archive/%{archive_tag}.tar.gz#/mcpp-%{version}.tar.gz
 URL: http://mcpp.sourceforge.net/
 License: BSD
 Group: System Environment/Libraries
@@ -42,7 +46,7 @@ mcpp is a C/C++ preprocessor with the following features.
 %define debug_package %{nil}
 
 %prep
-%setup -q -n mcpp-%{git_tag_version}
+%setup -q -n mcpp-%{archive_tag}
 
 %build
 make CFLAGS="%{optflags}"

@@ -2,29 +2,16 @@ name: "Build RPM Packages"
 
 on:
   workflow_dispatch:
-    inputs:
-      mcpp_version:
-        description: "The MCPP version to build"
-        required: false
-      channel:
-        description: "The release channel (e.g., 3.7, 3.8)"
-        required: true
   workflow_call:
-    inputs:
-      mcpp_version:
-        required: false
-        type: string
-      channel:
-        required: true
-        type: string
 
 jobs:
   build:
-    name: "Build for ${{ matrix.distribution }}-${{ matrix.arch }}"
+    name: "Build ${{ matrix.channel }}-${{ matrix.distribution }}-${{ matrix.arch }}"
     runs-on: ${{ matrix.arch == 'aarch64' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
     strategy:
       matrix:
         distribution: [el9, el10]
+        channel: ["3.7", "3.8"]
         arch: [x86_64, aarch64]
     steps:
       - name: Check out repository
@@ -39,27 +26,26 @@ jobs:
         run: |
           docker run --rm \
             -v "$GITHUB_WORKSPACE:/workspace" \
-            -e MCPP_VERSION="${{ inputs.mcpp_version }}" \
             -e GIT_TAG="${{ github.ref_name }}" \
             -e BUILD_ARCH="${{ matrix.arch }}" \
-            ghcr.io/zeroc-ice/ice-rpm-builder-${{ matrix.distribution }}:${{ inputs.channel }}  \
+            ghcr.io/zeroc-ice/ice-rpm-builder-${{ matrix.distribution }}:${{ matrix.channel }} \
             /workspace/mcpp/packaging/rpm/build-package.sh
 
       - name: Sign RPM packages
         env:
-          GPG_KEY: ${{ inputs.channel == '3.7' && secrets.ICE_3_7_CI_SIGNER_KEY || secrets.ICE_3_8_CI_SIGNER_KEY }}
-          GPG_KEY_ID: ${{ inputs.channel == '3.7' && secrets.ICE_3_7_CI_SIGNER_KEY_ID || secrets.ICE_3_8_CI_SIGNER_KEY_ID }}
+          GPG_KEY: ${{ matrix.channel == '3.7' && secrets.ICE_3_7_CI_SIGNER_KEY || secrets.ICE_3_8_CI_SIGNER_KEY }}
+          GPG_KEY_ID: ${{ matrix.channel == '3.7' && secrets.ICE_3_7_CI_SIGNER_KEY_ID || secrets.ICE_3_8_CI_SIGNER_KEY_ID }}
         run: |
           docker run --rm \
             -v "$GITHUB_WORKSPACE:/workspace" \
             -e GPG_KEY="${GPG_KEY}" \
             -e GPG_KEY_ID="${GPG_KEY_ID}" \
-            ghcr.io/zeroc-ice/ice-rpm-builder-${{ matrix.distribution }}:${{ inputs.channel }} \
+            -e CHANNEL="${{ matrix.channel }}" \
+            ghcr.io/zeroc-ice/ice-rpm-builder-${{ matrix.distribution }}:${{ matrix.channel }} \
             /workspace/mcpp/packaging/rpm/sign-package.sh
 
-      - name: Upload Artifacts
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: rpm-packages-${{ inputs.channel }}-${{ matrix.distribution }}-${{ matrix.arch }}
-          path: |
-            build/RPMS/*
+          name: rpm-packages-${{ matrix.channel }}-${{ matrix.distribution }}-${{ matrix.arch }}
+          path: build/RPMS/*

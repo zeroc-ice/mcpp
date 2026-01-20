@@ -3,17 +3,11 @@ name: "Publish RPM Packages"
 on:
   workflow_dispatch:
     inputs:
-      channel:
-        description: "The Ice release channel (e.g., 3.7, 3.8)"
-        required: true
       run_id:
         description: "The run ID to use for downloading artifacts"
         required: true
   workflow_call:
     inputs:
-      channel:
-        required: true
-        type: string
       run_id:
         required: true
         type: string
@@ -30,7 +24,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh run download "${{ inputs.run_id }}" --repo ${{ github.repository }} --pattern "rpm-packages-${{ inputs.channel }}-*" --dir staging
+          gh run download "${{ inputs.run_id }}" --repo ${{ github.repository }} --pattern "rpm-packages-*" --dir staging
 
       - name: Upload to GitHub Release
         if: startsWith(github.ref, 'refs/tags/')

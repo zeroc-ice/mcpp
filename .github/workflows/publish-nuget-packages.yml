@@ -3,27 +3,17 @@ name: "Publish NuGet Packages"
 on:
   workflow_dispatch:
     inputs:
-      channel:
-        description: "The Ice release channel (e.g., 3.7, 3.8)"
-        required: true
-      quality:
-        description: "Release quality (e.g., stable, nightly, RC)"
-        required: true
-        default: "nightly"
       run_id:
         description: "The run ID to use for downloading artifacts"
         required: true
   workflow_call:
     inputs:
-      channel:
-        required: true
-        type: string
-      quality:
-        required: true
-        type: string
       run_id:
         required: true
         type: string
+
+permissions:
+  contents: write
 
 jobs:
   publish:
@@ -38,27 +28,30 @@ jobs:
 
       - name: Publish NuGet Packages
         run: |
-          case "$QUALITY" in
-            "stable")
-              SOURCE_URL="https://api.nuget.org/v3/index.json"
-              NUGET_API_KEY="${RELEASE_NUGET_API_KEY}"
-              ;;
-            *)
-              SOURCE_URL="https://download.zeroc.com/nexus/repository/nuget-${CHANNEL}-${QUALITY}/"
-              NUGET_API_KEY="${NEXUS_NIGHTLY_NUGET_API_KEY}"
-              ;;
-          esac
-
           # Collect all packages
           mapfile -t packages < <(find staging -type f -name "*.nupkg")
 
-          # Push each package to the appropriate NuGet repository
+          # Push each package to NuGet.org
           for package in "${packages[@]}"; do
             echo "Publishing package: $package"
-            dotnet nuget push "$package" --source "$SOURCE_URL" --api-key "$NUGET_API_KEY"
+            dotnet nuget push "$package" --source "https://api.nuget.org/v3/index.json" --api-key "$NUGET_API_KEY"
           done
         env:
-          CHANNEL: ${{ inputs.channel }}
-          QUALITY: ${{ inputs.quality }}
-          NEXUS_NIGHTLY_NUGET_API_KEY: ${{ secrets.NEXUS_NIGHTLY_NUGET_API_KEY }}
-          RELEASE_NUGET_API_KEY: ${{ secrets.RELEASE_NUGET_API_KEY }}
+          NUGET_API_KEY: ${{ secrets.RELEASE_NUGET_API_KEY }}
+
+      - name: Upload to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Uploading NuGet packages to GitHub release..."
+          shopt -s nullglob
+          packages=(staging/**/*.nupkg)
+          if [ ${#packages[@]} -eq 0 ]; then
+            echo "Error: No NuGet packages found"
+            exit 1
+          fi
+          for package in "${packages[@]}"; do
+            echo "Uploading $(basename "$package")..."
+            gh release upload "${{ github.ref_name }}" "$package" --repo ${{ github.repository }}
+          done

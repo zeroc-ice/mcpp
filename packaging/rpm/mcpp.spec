@@ -2,7 +2,7 @@
 # Copyright (c) ZeroC, Inc. All rights reserved.
 #
 
-# git_tag, when defined, is typically a branch or tag, for example master or v2.7.4
+# git_tag, when defined, is typically a branch or tag, for example master or v2.7.2-20
 %if 0%{?git_tag:1}
    %define archive_tag %{git_tag}
 %else
@@ -11,8 +11,8 @@
 
 Summary: mcpp, a portable C/C++ preprocessor
 Name: mcpp-devel
-Version: 2.7.4
-Release: 1ice%{?dist}
+Version: 2.7.2
+Release: 20ice%{?dist}
 Source: https://github.com/zeroc-ice/mcpp/archive/%{archive_tag}.tar.gz#/mcpp-%{version}.tar.gz
 URL: http://mcpp.sourceforge.net/
 License: BSD
@@ -74,7 +74,7 @@ EOF
 %{_libdir}/pkgconfig/mcpp.pc
 
 %changelog
-* Sun Jan 19 2026 Jose Gutierrez de la Concha  <jose@zeroc.com> 2.7.4-1ice
+* Sun Jan 19 2026 Jose Gutierrez de la Concha  <jose@zeroc.com> 2.7.2-20ice
 - Fix heap-use-after-free in substitute() (https://github.com/zeroc-ice/mcpp/issues/9)
 - Fix heap-based buffer overflow in do_msg() (https://github.com/zeroc-ice/mcpp/issues/10)
 

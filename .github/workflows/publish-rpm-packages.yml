@@ -6,10 +6,6 @@ on:
       channel:
         description: "The Ice release channel (e.g., 3.7, 3.8)"
         required: true
-      quality:
-        description: "Release quality (e.g., stable, nightly, RC)"
-        required: true
-        default: "nightly"
       run_id:
         description: "The run ID to use for downloading artifacts"
         required: true
@@ -18,12 +14,12 @@ on:
       channel:
         required: true
         type: string
-      quality:
-        required: true
-        type: string
       run_id:
         required: true
         type: string
+
+permissions:
+  contents: write
 
 jobs:
   publish:
@@ -34,29 +30,26 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh run download "${{ inputs.run_id }}" --repo ${{ github.repository }} --pattern "rpm-packages-*" --dir staging
+          gh run download "${{ inputs.run_id }}" --repo ${{ github.repository }} --pattern "rpm-packages-${{ inputs.channel }}-*" --dir staging
 
-      - name: Upload to S3 Repository
-        run: |
-          if [ "${QUALITY}" = "stable" ]; then
-            UPLOAD_PATH="mcpp/${CHANNEL}"
-          else
-            UPLOAD_PATH="mcpp/${QUALITY}/${CHANNEL}"
-          fi
-
-          echo "Uploading RPM packages to S3..."
-          for dir in staging/rpm-packages-*; do
-            if [ -d "$dir" ]; then
-              artifact_name=$(basename "$dir")
-              echo "Uploading $artifact_name..."
-              pushd "$dir" > /dev/null
-              zip -r "../${artifact_name}.zip" .
-              popd > /dev/null
-              aws s3 cp "staging/${artifact_name}.zip" "s3://zeroc-downloads/${UPLOAD_PATH}/"
-            fi
-          done
+      - name: Upload to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
         env:
-          CHANNEL: ${{ inputs.channel }}
-          QUALITY: ${{ inputs.quality }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Uploading RPM packages to GitHub release..."
+          shopt -s nullglob
+          dirs=(staging/rpm-packages-*/)
+          if [ ${#dirs[@]} -eq 0 ]; then
+            echo "Error: No RPM artifacts found"
+            exit 1
+          fi
+          for dir in "${dirs[@]}"; do
+            artifact_name=$(basename "$dir")
+            echo "Creating ${artifact_name}.zip..."
+            pushd "$dir" > /dev/null
+            zip -r "../${artifact_name}.zip" .
+            popd > /dev/null
+            echo "Uploading ${artifact_name}.zip..."
+            gh release upload "${{ github.ref_name }}" "staging/${artifact_name}.zip" --repo ${{ github.repository }}
+          done

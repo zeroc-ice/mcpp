@@ -1,0 +1,56 @@
+name: "Build NuGet Packages"
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build:
+    name: "Build NuGet Package (${{ matrix.package }})"
+    runs-on: windows-2022
+    strategy:
+      matrix:
+        include:
+          - package: mcpp.v142
+            toolset: v142
+
+          - package: mcpp.v143
+            toolset: v143
+
+          - package: ZeroC.Mcpp
+            toolset: v143
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Install MSVC v142 toolset
+        if: matrix.toolset == 'v142'
+        shell: pwsh
+        run: |
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $vsInstaller = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vs_installer.exe"
+
+          $installPath = & $vswhere -latest -products * -property installationPath
+          if (-not $installPath) { throw "Visual Studio installation not found." }
+
+          # v142 toolset component group ID (VS2019 toolset)
+          & $vsInstaller modify --installPath "$installPath" `
+            --add Microsoft.VisualStudio.ComponentGroup.VC.Tools.142.x86.x64 `
+            --quiet --wait --norestart
+          if ($LASTEXITCODE -ne 0) {
+            throw "Failed to install MSVC v142 toolset. vs_installer exited with code $LASTEXITCODE."
+          }
+
+      - name: Build NuGet Package
+        working-directory: msbuild
+        run: MSBuild mcpp.proj /t:NugetPack /p:DefaultPlatformToolset=${{ matrix.toolset }} /p:PackageName=${{ matrix.package }}
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-package-${{ matrix.package }}
+          path: msbuild/build/${{ matrix.package }}/*.nupkg

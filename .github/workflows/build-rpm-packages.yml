@@ -1,15 +1,22 @@
 name: "Build RPM Packages"
 
 on:
-  push:
-    # Run on version tags
-    tags:
-      - "v[0-9]*"
   workflow_dispatch:
     inputs:
       mcpp_version:
         description: "The MCPP version to build"
         required: false
+      channel:
+        description: "The release channel (e.g., 3.7, 3.8)"
+        required: true
+  workflow_call:
+    inputs:
+      mcpp_version:
+        required: false
+        type: string
+      channel:
+        required: true
+        type: string
 
 jobs:
   build:
@@ -17,22 +24,8 @@ jobs:
     runs-on: ${{ matrix.arch == 'aarch64' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
     strategy:
       matrix:
-        include:
-          - distribution: rhel9
-            arch: x86_64
-            image: ghcr.io/zeroc-ice/mcpp-rpm-package-builder-x86_64-rhel9:latest
-
-          - distribution: rhel9
-            arch: aarch64
-            image: ghcr.io/zeroc-ice/mcpp-rpm-package-builder-aarch64-rhel9:latest
-
-          - distribution: rhel10
-            arch: x86_64
-            image: ghcr.io/zeroc-ice/mcpp-rpm-package-builder-x86_64-rhel10:latest
-
-          - distribution: rhel10
-            arch: aarch64
-            image: ghcr.io/zeroc-ice/mcpp-rpm-package-builder-aarch64-rhel10:latest
+        distribution: [el9, el10]
+        arch: [x86_64, aarch64]
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -49,17 +42,17 @@ jobs:
             -e MCPP_VERSION="${{ inputs.mcpp_version }}" \
             -e GIT_TAG="${{ github.ref_name }}" \
             -e BUILD_ARCH="${{ matrix.arch }}" \
-            ${{matrix.image}} \
+            ghcr.io/zeroc-ice/ice-rpm-builder-${{ matrix.distribution }}:${{ inputs.channel }}  \
             /workspace/mcpp/packaging/rpm/build-package.sh
 
       - name: Sign RPM packages
         run: |
           docker run --rm \
             -v "$GITHUB_WORKSPACE:/workspace" \
-            -e GPG_KEY="${{ secrets.ICE_3_8_CI_SIGNER_KEY }}" \
-            -e GPG_KEY_ID="${{ secrets.ICE_3_8_CI_SIGNER_KEY_ID }}" \
-            ghcr.io/zeroc-ice/rpm-repo-builder:latest \
-            /usr/local/bin/rpm-sign /workspace/build/RPMS
+            -e GPG_KEY="${{ secrets.ICE_3_7_CI_SIGNER_KEY }}" \
+            -e GPG_KEY_ID="${{ secrets.ICE_3_7_CI_SIGNER_KEY_ID }}" \
+            ghcr.io/zeroc-ice/ice-rpm-builder-${{ matrix.distribution }}:${{ inputs.channel }} \
+            /workspace/mcpp/packaging/rpm/sign-package.sh
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4

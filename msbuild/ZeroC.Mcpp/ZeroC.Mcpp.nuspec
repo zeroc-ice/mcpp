@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>mcpp.v142</id>
-    <version>2.7.2.18</version>
-    <authors>Kiyoshi Matsui</authors>
+    <id>ZeroC.Mcpp</id>
+    <version>2.7.2.20</version>
+    <authors>ZeroC</authors>
     <licenseUrl>https://raw.githubusercontent.com/zeroc-ice/mcpp/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/zeroc-ice/mcpp</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

@@ -2,14 +2,18 @@
 # Copyright (c) ZeroC, Inc. All rights reserved.
 #
 
-# the github version tag without v prefix
-%define git_tag_version 2.7.2.19
+# git_tag, when defined, is typically a branch or tag, for example master or v2.7.2-20
+%if 0%{?git_tag:1}
+   %define archive_tag %{git_tag}
+%else
+   %define archive_tag master
+%endif
 
 Summary: mcpp, a portable C/C++ preprocessor
 Name: mcpp-devel
 Version: 2.7.2
-Release: 19ice%{?dist}
-Source: https://github.com/zeroc-ice/mcpp/archive/v%{git_tag_version}/mcpp-%{version}.tar.gz
+Release: 20ice%{?dist}
+Source: https://github.com/zeroc-ice/mcpp/archive/%{archive_tag}.tar.gz#/mcpp-%{version}.tar.gz
 URL: http://mcpp.sourceforge.net/
 License: BSD
 Group: System Environment/Libraries
@@ -42,7 +46,7 @@ mcpp is a C/C++ preprocessor with the following features.
 %define debug_package %{nil}
 
 %prep
-%setup -q -n mcpp-%{git_tag_version}
+%setup -q -n mcpp-%{archive_tag}
 
 %build
 make CFLAGS="%{optflags}"
@@ -70,6 +74,10 @@ EOF
 %{_libdir}/pkgconfig/mcpp.pc
 
 %changelog
+* Sun Jan 19 2026 Jose Gutierrez de la Concha  <jose@zeroc.com> 2.7.2-20ice
+- Fix heap-use-after-free in substitute() (https://github.com/zeroc-ice/mcpp/issues/9)
+- Fix heap-based buffer overflow in do_msg() (https://github.com/zeroc-ice/mcpp/issues/10)
+
 * Tue Jun 17 2025 Jose Gutierrez de la Concha  <jose@zeroc.com> 2.7.2-19ice
 - Add support for Red Hat 10 platforms
 

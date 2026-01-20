@@ -75,28 +75,28 @@
         <MSBuild Projects="@(Projects)" Properties="%(Properties)" Targets="Clean" />
     </Target>
 
-    <PropertyGroup>
-        <PackageDirectory>mcpp.$(DefaultPlatformToolset)</PackageDirectory>
+    <PropertyGroup Condition="'$(PackageName)' == ''">
+        <PackageName>mcpp.$(DefaultPlatformToolset)</PackageName>
     </PropertyGroup>
 
     <Target Name="NugetPack"
             DependsOnTargets="Build">
-            <RemoveDir Directories="$(PackageDirectory)" />
+            <RemoveDir Directories="build\$(PackageName)" />
             <MSBuild Projects="mcpp.nuget.targets"
-                     Properties="Configuration=Debug;Platform=Win32;PackageDirectory=$(PackageDirectory);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
+                     Properties="Configuration=Debug;Platform=Win32;PackageDirectory=build\$(PackageName);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
             <MSBuild Projects="mcpp.nuget.targets"
-                     Properties="Configuration=Debug;Platform=x64;PackageDirectory=$(PackageDirectory);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
+                     Properties="Configuration=Debug;Platform=x64;PackageDirectory=build\$(PackageName);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
             <MSBuild Projects="mcpp.nuget.targets"
-                     Properties="Configuration=Release;Platform=Win32;PackageDirectory=$(PackageDirectory);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
+                     Properties="Configuration=Release;Platform=Win32;PackageDirectory=build\$(PackageName);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
             <MSBuild Projects="mcpp.nuget.targets"
-                     Properties="Configuration=Release;Platform=x64;PackageDirectory=$(PackageDirectory);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
-            <Copy SourceFiles="README.$(DefaultPlatformToolset).md"
-                  DestinationFiles="$(PackageDirectory)\README.md" />
-            <Copy SourceFiles="mcpp.$(DefaultPlatformToolset).nuspec"
-                  DestinationFolder="$(PackageDirectory)" />
-            <Copy SourceFiles="mcpp.$(DefaultPlatformToolset).targets"
-                  DestinationFolder="$(PackageDirectory)\build\native" />
+                     Properties="Configuration=Release;Platform=x64;PackageDirectory=build\$(PackageName);DefaultPlatformToolset=$(DefaultPlatformToolset)" />
+            <Copy SourceFiles="$(PackageName)\README.md"
+                  DestinationFolder="build\$(PackageName)" />
+            <Copy SourceFiles="$(PackageName)\$(PackageName).nuspec"
+                  DestinationFolder="build\$(PackageName)" />
+            <Copy SourceFiles="$(PackageName)\$(PackageName).targets"
+                  DestinationFolder="build\$(PackageName)\build\native" />
             <Exec Command="$(MSBuildThisFileDirectory)nuget pack -NoPackageAnalysis -NonInteractive"
-                  WorkingDirectory="$(PackageDirectory)"/>
+                  WorkingDirectory="build\$(PackageName)"/>
     </Target>
 </Project>

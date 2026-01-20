@@ -1,7 +1,3 @@
-mcpp.*/
+build/
 .vs
 *.VC.db
-v100
-v110
-v120
-v140

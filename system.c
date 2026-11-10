@@ -377,6 +377,9 @@ opt_search: ;
             }
             break;
 
+        case 'k':                           /* Keep white spaces    */
+            option_flags.k = TRUE;
+            break;
 
         case 'M':           /* Output source file dependency line   */
             if (argv[ mcpp_optind - 1] == mcpp_optarg) {     /* -M   */
@@ -488,6 +491,8 @@ static void usage(
 
 "-I-         Unset system or site specific include directories.\n",
 
+"-k          Keep white spaces of input lines as they are.\n",
+
 "-M file\n",
 "            Output source file dependency line for makefile.\n",
 "-U <macro>  Undefine <macro>.\n",
@@ -532,7 +537,7 @@ static void set_opt_list(
 
     const char * const *    lp = & list[ 0];
 
-    strcpy( optlist, "e:CD:I:M:U:");
+    strcpy( optlist, "e:kCD:I:M:U:");
                                                 /* Default options  */
     while (*lp)
         strcat( optlist, *lp++);

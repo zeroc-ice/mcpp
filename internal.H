@@ -324,6 +324,7 @@ extern struct std_limits_ {
 /* The boolean flags specified by the execution options.    */
 extern struct option_flags_ {
         int     c;                  /* -C option (keep comments)    */
+        int     k;                  /* -k option (keep white spaces)*/
 } option_flags;
 
 extern int      stdc_val;           /* Value of __STDC__            */
@@ -335,6 +336,7 @@ extern long     src_line;           /* Current source line number   */
 extern int      wrong_line;         /* Force #line to compiler      */
 extern int      newlines;           /* Count of blank lines         */
 extern int      keep_comments;      /* Don't remove comments        */
+extern int      keep_spaces;        /* Don't remove white spaces    */
 extern int      include_nest;       /* Nesting level of #include    */
 extern const char *     null;       /* "" string for convenience    */
 extern const char **    inc_dirp;   /* Directory of #includer       */

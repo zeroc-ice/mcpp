@@ -1109,8 +1109,16 @@ static char *   parse_line( void)
                     return  NULL;           /*   terminated comment */
                 }
                 if (keep_spaces) {
+                    /*
+                     * Truncate a comment too long for the rest of the buffer.
+                     * The buffer may already be full: an earlier comment of
+                     * this line was truncated to end at 'limit - 1', and a
+                     * token after it moved 'tp' to 'limit'.  'limit - tp - 1'
+                     * is then negative, and would become a huge 'com_size',
+                     * so the comment gets no padding instead.
+                     */
                     if (tp + com_size >= limit - 1)     /* Too long comment */
-                        com_size = limit - tp - 1;      /* Truncate */
+                        com_size = (tp < limit - 1) ? limit - tp - 1 : 0;
                     while (com_size--)
                         *tp++ = ' ';        /* Spaces of the comment length */
                     break;

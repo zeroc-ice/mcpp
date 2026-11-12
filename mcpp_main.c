@@ -510,6 +510,12 @@ static void mcpp_main( void)
          */
         if (no_output) {
             wrong_line = FALSE;
+            /*
+             * Nothing is output, so there are no columns to adjust.
+             * A 'src_col' left set would make the loop above skip
+             * directive() on every following line.
+             */
+            src_col = 0;
         } else {
             if (wrong_line || newlines > 10) {
                 sharp( NULL, 0);            /* Output # line number */

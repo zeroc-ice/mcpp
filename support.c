@@ -1108,6 +1108,21 @@ static char *   parse_line( void)
                     free( temp);            /* End of file with un- */
                     return  NULL;           /*   terminated comment */
                 }
+                if (keep_spaces) {
+                    /*
+                     * Truncate a comment too long for the rest of the buffer.
+                     * The buffer may already be full: an earlier comment of
+                     * this line was truncated to end at 'limit - 1', and a
+                     * token after it moved 'tp' to 'limit'.  'limit - tp - 1'
+                     * is then negative, and would become a huge 'com_size',
+                     * so the comment gets no padding instead.
+                     */
+                    if (tp + com_size >= limit - 1)     /* Too long comment */
+                        com_size = (tp < limit - 1) ? limit - tp - 1 : 0;
+                    while (com_size--)
+                        *tp++ = ' ';        /* Spaces of the comment length */
+                    break;
+                }
                 if (temp == tp ||
                         ! (char_type[ *(tp - 1) & UCHARMAX] & HSP))
                     *tp++ = ' ';        /* Squeeze white spaces */
@@ -1141,7 +1156,12 @@ static char *   parse_line( void)
                     , NULL, (long) c, NULL);
         case '\t':                          /* Horizontal space     */
         case ' ':
-            if (! (char_type[ *(tp - 1) & UCHARMAX] & HSP)) {
+            if (keep_spaces) {
+                if (c == '\t')
+                    *tp++ = '\t';
+                else
+                    *tp++ = ' ';            /* Convert to ' '       */
+            } else if (! (char_type[ *(tp - 1) & UCHARMAX] & HSP)) {
                 *tp++ = ' ';                /* Squeeze white spaces */
             }
             break;
@@ -1206,6 +1226,10 @@ static char *   read_a_comment(
     char *      saved_sp;
     int         cat_line = 0;       /* Number of catenated lines    */
 
+    if (keep_spaces) {
+        saved_sp = sp - 2;          /* '-2' for beginning / and *   */
+        *sizp = 0;
+    }
     if (keep_comments)                      /* If writing comments  */
         mcpp_fputs( "/*", OUT);             /* Write the initializer*/
     c = *sp++;
@@ -1232,6 +1256,8 @@ static char *   read_a_comment(
                     /*  trouble on some other tools such as rpcgen. */
                 wrong_line = TRUE;
             }
+            if (keep_spaces)                /* Save the length      */
+                *sizp = *sizp + (sp - saved_sp);
             if ((mcpp_debug & MACRO_CALL) && compiling) {
                 if (cat_line) {
                     cat_line++;
@@ -1244,6 +1270,8 @@ static char *   read_a_comment(
             }
             return  sp;                     /* End of comment       */
         case '\n':                          /* Line-crossing comment*/
+            if (keep_spaces)                /* Save the length      */
+                *sizp = *sizp + (sp - saved_sp) - 1;    /* '-1' for '\n'    */
             if ((mcpp_debug & MACRO_CALL) && compiling) {
                                     /* Save location informations   */
                 if (cat_line == 0)  /* First line of catenation     */

@@ -342,6 +342,7 @@ if_nest_err:
 ret:
     in_directive = FALSE;
     keep_comments = option_flags.c && compiling && !no_output;
+    keep_spaces = option_flags.k && compiling;
        /* keep_spaces is on for #define line even if no_output is TRUE  */
     if (! wrong_line)
         newlines++;

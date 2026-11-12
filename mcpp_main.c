@@ -45,6 +45,7 @@
     /* The boolean flags specified by the execution options.    */
     struct option_flags_    option_flags = {
         FALSE,          /* c:   -C (keep comments)                  */
+        FALSE,          /* k:   -k (keep white spaces)              */
     };
 
     int     mcpp_mode = STD;        /* Mode of preprocessing        */
@@ -263,7 +264,7 @@ static void     init_main( void)
     std_limits.str_len = NBUFF;
     std_limits.id_len = IDMAX;
     std_limits.n_mac_pars =  NMACPARS;
-    option_flags.c = FALSE;
+    option_flags.c = option_flags.k = FALSE;
     sh_file = NULL;
     sh_line = 0;
 }
@@ -455,6 +456,7 @@ static void mcpp_main( void)
     LINE_COL    line_col;   /* Location of macro call in source     */
 
     keep_comments = option_flags.c && !no_output;
+    keep_spaces = option_flags.k;       /* Will be turned off if !compiling */
     line_col.col = line_col.line = 0L;
 
     /*
